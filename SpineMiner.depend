@@ -1,0 +1,126 @@
+# depslib dependency file v1.0
+1366719686 source:d:\sourcecodes\github\spineminer\database.cpp
+	"database.h"
+
+1366719673 d:\sourcecodes\github\spineminer\database.h
+	<vector>
+	<stdlib.h>
+	<stdio.h>
+	"sqlite/sqlite3.h"
+	"helpers.h"
+
+1337702580 d:\sourcecodes\github\spineminer\sqlite\sqlite3.h
+	<stdarg.h>
+
+1365864184 d:\sourcecodes\github\spineminer\helpers.h
+	<string>
+	<iostream>
+	<sstream>
+	<vector>
+	<cmath>
+	<limits>
+	<fstream>
+	<dirent.h>
+	<sys/types.h>
+
+1364489600 source:d:\sourcecodes\github\spineminer\dbscan.cpp
+	"dbscan.h"
+
+1364489522 d:\sourcecodes\github\spineminer\dbscan.h
+	"kdtree/kdtree.h"
+	<utility>
+	<vector>
+
+1322184070 d:\sourcecodes\github\spineminer\kdtree\kdtree.h
+
+1376047263 source:d:\sourcecodes\github\spineminer\functions.cpp
+	"functions.h"
+
+1376047490 d:\sourcecodes\github\spineminer\functions.h
+	<dir.h>
+	<algorithm>
+	<fstream>
+	"database.h"
+	"ovlreader.h"
+	"helpers.h"
+	"dbscan.h"
+	"CImg/cimg.h"
+
+1366722179 d:\sourcecodes\github\spineminer\ovlreader.h
+	<vector>
+	<fstream>
+	<dir.h>
+	<string.h>
+	"database.h"
+	"helpers.h"
+
+1359490374 d:\sourcecodes\github\spineminer\cimg\cimg.h
+	<cstdio>
+	<cstdlib>
+	<cstdarg>
+	<cstring>
+	<cmath>
+	<ctime>
+	<exception>
+	<sys/types.h>
+	<sys/time.h>
+	<unistd.h>
+	<windows.h>
+	<shlobj.h>
+	<process.h>
+	<io.h>
+	<stdio.h>
+	<X11/Xlib.h>
+	<X11/Xutil.h>
+	<X11/keysym.h>
+	<pthread.h>
+	<sys/ipc.h>
+	<sys/shm.h>
+	<X11/extensions/XShm.h>
+	<X11/extensions/Xrandr.h>
+	"omp.h"
+	<cstddef>
+	"cv.h"
+	"highgui.h"
+	"png.h"
+	"jpeglib.h"
+	"setjmp.h"
+	"tiffio.h"
+	"minc_io_simple_volume.h"
+	"minc_1_simple.h"
+	"minc_1_simple_rw.h"
+	"avformat.h"
+	"avcodec.h"
+	"swscale.h"
+	"zlib.h"
+	"Magick++.h"
+	"fftw3.h"
+	"Board.h"
+	"ImfRgbaFile.h"
+	"ImfInputFile.h"
+	"ImfChannelList.h"
+	"ImfMatrixAttribute.h"
+	"ImfArray.h"
+	"CImg.h"
+
+1365864236 source:d:\sourcecodes\github\spineminer\helpers.cpp
+	"helpers.h"
+
+1376056362 source:d:\sourcecodes\github\spineminer\main.cpp
+	<stdio.h>
+	<string>
+	<iostream>
+	<dir.h>
+	"ioswitch.h"
+	"helpers.h"
+	"database.h"
+	"functions.h"
+
+1376046420 d:\sourcecodes\github\spineminer\ioswitch.h
+	<streambuf>
+	<ios>
+	<fstream>
+
+1366803842 source:d:\sourcecodes\github\spineminer\ovlreader.cpp
+	"ovlreader.h"
+

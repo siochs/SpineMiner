@@ -1,0 +1,30 @@
+
+Info> SpineMiner 1.0 (Simon Ochs 2013).
+
+Error> No ovl files found in "D:\sourcecodes\github\SpineMiner"
+Info> SpineMiner stopped.
+Info> You may proceed using the following options. All outputs will be also available in "log.txt":
+SpineMiner.exe --> tests the ovl files in the current working directory for consistency.
+	-w:<filename> --> builds database from OVL files in the specified <filename>.
+	-w:<filename> -ignoremorphologies --> spine morphology tags, if any, will be ignored. Please note that "16s" represents an other entity than "16".
+	-w:<filename> -nofilopodia --> filopodia like spines will be counted as thin likes.
+
+	-r:<filename> --> test database integrity and shows command line options.
+	-r:<filename> -calcsurvival:<imaging_timepoint> --> spine survival will be recalculated using <imaging_timepoint> as start (default = 1).
+	-r:<filename> -calcnewgained:<imaging_timepoint> --> recalculates the survival of spines which were gained at <imaging_timepoint> (default = 2)
+	-r:<filename> -calctransients:<max_lifetime> --> redetection of transient spines by a defined <max_lifetime> (default <= 8).
+	-r:<filename> -survival:<dendrite_id> --> shows a foretaste of a survival courve for a specified <dendrite_id>.
+	-r:<filename> -trace:<dendrite_id>,<spine_id> --> shows the spine fate of specified by its <dendrite_id> and <spine_id>.
+	-r:<filename> -check --> test database integrity.
+	-r:<filename> -tor:<dendrite_id> --> shows the turnover rate of a dendrite specified by <dendrite_id>.
+	-r:<filename> -dbscan:<dendrite_id>,<epsilon>,<minPts> --> runs a dbscan on a specified <dendrite_id> (use "*" for all dendrites) using <epsilon> and <minPts> as algorithm parameters.
+	-r:<filename> -quickdbscan --> runs a dbscan on all dendrites unsurvived.
+	-r:<filename> -pipe:<sqlfile> --> batch processing of SQL statements stored in the specified <sqlfile>. The results will be stored in <sqlfile>.result.txt.
+
+	-q:<filename> --> Opens a SQL session to accept statements. Quit with "!q"
+
+	-replace:<findstring>,<replacestring> --> find & replace for all ovl files in current working directory. Warning: function may causes data corruption (beta status).
+
+	-c:<filename> --> converts the database into a CSV-file which also contains dendrite, spine and spacial characteristics.
+
+Info> Done in D:\sourcecodes\github\SpineMiner after 1 seconds :-)
