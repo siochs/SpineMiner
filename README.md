@@ -1,5 +1,8 @@
 # SpineMiner 
 ----------
+
+Simon M. Ochs, 2013
+
 ## Abstract
 SpineMiner is an image overlay processor. Zeiss' [ZEN](http://www.zeiss.de/ZEN "ZEN") 2009 (or higher) software provides text annotations of microscopy images which are stored as so called OVERLAY-Files (.ovl). This feature is commonly used in neuroscience when analyzing two-photon in vivo imaging data of dendritic spines, cell bodies or other objects. Each text-annotation is stored within a binary stream in the ovl-file. Since this file format is not open, the information for extracting the relevant data (text, text-color, x- and y-position of the text-box) had to be obtained by reverse engineering. During extraction of the ovl-files, the data is stored in a small mySQL database which follows a very simple 1:N entity relationship model. The database is embedded as [SQLite3](http://www.sqlite.org/ "SQLite3") library within the application source. When the database creation is complete, SpineMiner processes the tables to calculate a whole bunch of scientific readouts. If you wish, you can also command SpineMiner to process your own SQL-Plugin to generate a readout which is not natively implemented in the sourcecode. All results can be converted as comma-separated values. 
 Currently, data acquisition and calculation of readouts is done using [Microsoft's Excel](http://office.microsoft.com/excel‎ "Microsoft Excel") or similar table calculators which is very time consuming. Using SpineMiner, this step can be shortened to 1/1000 of the time you spent in front of MS Excel. SpineMiner currently runs on command line. A userfriendly GUI for Windows already exists and will be also published on GitHub as "SpineMinerXT".
