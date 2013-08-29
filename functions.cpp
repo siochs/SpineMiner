@@ -1423,6 +1423,12 @@ void Convert(Database &db, string filename)
     WriteSum(db, f, "CAST(100*lost_spines AS DOUBLE) / living_spines");
     WriteSum(db, f, "CAST(100*gainedlost AS DOUBLE) / living_spines");
 
+    f << "Density of gained, stable, lost and gained+lost spines:;" << endl;
+    WriteSum(db, f, "CAST(gained_spines AS DOUBLE) / length");
+    WriteSum(db, f, "CAST(stable_spines AS DOUBLE) / length");
+    WriteSum(db, f, "CAST(lost_spines AS DOUBLE) / length");
+    WriteSum(db, f, "CAST(gainedlost AS DOUBLE) / length");
+
     f << "Shapeshifting frequency:;" << endl;
     WriteSum(db, f, "shapeshifting_frequency");
 
