@@ -25,7 +25,7 @@
 * Usage:
 * SpineMiner.exe                                                  --> tests the ovl files in the current working directory for consistency
 * SpineMiner.exe -w:<filename>                                    --> tests the ovl files in the current working directory for consistency and reads content into database <filename>
-* SpineMiner.exe -w:<filename> -ignoremorphologies                --> ignoring morphology tags for spines (if any)
+* SpineMiner.exe -w:<filename> -ignoremorphologies                --> use this, if your spines have no morphology tags
 * SpineMiner.exe -w:<filename> -nofilopodia                       --> all as filopodia tagged spines will be treated as thin spines
 *
 * SpineMiner.exe -r:<filename>                                    --> reads the database and showing dendrites and spines table
