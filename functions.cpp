@@ -49,7 +49,7 @@ void ShowUsage()
     cout << "Info> You may proceed using the following options. All outputs will be also available in \"log.txt\":" << endl;
     cout << "SpineMiner.exe --> tests the ovl files in the current working directory for consistency." << endl;
     cout << "\t-w:<filename> --> builds database from OVL files in the specified <filename>." << endl;
-    cout << "\t-w:<filename> -ignoremorphologies --> spine morphology tags, if any, will be ignored. Please note that \"16s\" represents an other entity than \"16\"." << endl;
+    cout << "\t-w:<filename> -ignoremorphologies --> use this, if your spines have no morphology tags." << endl;
     cout << "\t-w:<filename> -nofilopodia --> filopodia like spines will be counted as thin likes." << endl;
     cout << endl;
     cout << "\t-r:<filename> --> test database integrity and shows command line options." << endl;
