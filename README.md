@@ -26,7 +26,7 @@ A demonstrating counting video can be wached on here: [http://vimeo.com/72959890
 	2. Select the text-tool from the overlay options. Default font = arial. Color = blue (#4). Write "id=X" into the image (without quotes), whereas X can be any alphanumeric character (a-z A-Z 0-9). X represents a unique dendrite ID and stays constant for all imaging timepoints.
 	3. Add "l=LL.LL" (without quotes, color = blue (#4)). l represents the dendrite length, LL.LL a floating point value, usually in micrometers.
 	4. Add "day=dd" (without quotes, color = blue (#4)). day represents the imaging timepoint (which does not necessarily have to be days). NOTE: THE FIRST TIMEPOINT STARTS WITH day=1.
-	5. Now add spines/cells whatever you like. Add a tag to each object. The tag has to have the format "Ic" (without quotes, e.g. 1s, 2f, 12m, 19t...) using color = white (#1; "stable"). I stands for the spine ID which has to be a decimal number. c stands for a single character reflecting the morphology of the spine: s=stubby, f=filopodia, m=mushroom, t=thin. NOTE: YOU HAVE TO DECIDE FIRST IF YOU WANT TO QUANTIFY SPINE MORPHOLOGIES OR NOT. DON'T STOP USING MORPHOLOGIES IN THE MIDDLE OF YOUR EVALUATION BECAUSE SPINEMINER CAN'T WORK WITH MIXTURES. If you are indeed counting spines, i suggest ALLWAYS TO USE MORPHOLOGY TAGS BECAUSE SPINEMINER CAN BE EXECUTED WITH A "-ignoremorphologies" OPTION WHICH IN TURN IGNORES MORPHOLOGY QUANTIFICATION.
+	5. Now add spines/cells whatever you like. Add a tag to each object. The tag has to have the format "Ic" (without quotes, e.g. 1s, 2f, 12m, 19t...) using color = white (#1; "stable"). I stands for the spine ID which has to be a decimal number. c stands for a single character reflecting the morphology of the spine: s=stubby, f=filopodia, m=mushroom, t=thin. NOTE: YOU HAVE TO DECIDE FIRST IF YOU WANT TO QUANTIFY SPINE MORPHOLOGIES OR NOT. DON'T STOP USING MORPHOLOGIES IN THE MIDDLE OF YOUR EVALUATION BECAUSE SPINEMINER CAN'T WORK WITH MIXTURES. If you are indeed counting spines, i recommend ALLWAYS TO USE MORPHOLOGY TAGS.
 	6. Save your overlay file.
 - Timepoint 2
 	1. Open the next imaging timepoint.
@@ -155,7 +155,7 @@ As highlighted in `main.c` and in function `void ShowUsage()`, SpineMiner can be
 
     * SpineMiner.exe --> tests the ovl files in the current working directory for consistency
     * SpineMiner.exe -w:<filename> --> tests the ovl files in the current working directory for consistency and reads content into database <filename>
-    * SpineMiner.exe -w:<filename> -ignoremorphologies --> ignoring morphology tags for spines (if any)
+    * SpineMiner.exe -w:<filename> -ignoremorphologies --> use this, if your spines have no morphology tags
     * SpineMiner.exe -w:<filename> -nofilopodia --> all as filopodia tagged spines will be treated as thin spines
     
     * SpineMiner.exe -r:<filename> --> reads the database and showing dendrites and spines table
