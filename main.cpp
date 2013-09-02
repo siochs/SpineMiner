@@ -7,8 +7,8 @@
 *   g++ (GCC): 4.6.2
 *   gcc (GCC): 4.6.2
 *   linker options: -lgdi32
-*   
-* This project was created using Code::Blocks 12.11 for Windows. 
+*
+* This project was created using Code::Blocks 12.11 for Windows.
 * Use the SpineMiner.cbp to build.
 * Otherwise you may create SpineMiner from scratch or use build.bat:
 *   g++.exe -Wall -fexceptions -g -c database.cpp -o obj\Debug\database.o
@@ -19,7 +19,7 @@
 *   g++.exe -Wall -fexceptions -g -c main.cpp -o obj\Debug\main.o
 *   g++.exe -Wall -fexceptions -g -c ovlreader.cpp -o obj\Debug\ovlreader.o
 *   gcc.exe -Wall -fexceptions -g -c sqlite\sqlite3.c -o obj\Debug\sqlite3.o
-*   g++.exe  -o bin\Debug\SpineMiner.exe obj\Debug\database.o obj\Debug\dbscan.o obj\Debug\functions.o obj\Debug\helpers.o obj\Debug\kdtree.o obj\Debug\main.o obj\Debug\ovlreader.o obj\Debug\sqlite3.o -lgdi32 
+*   g++.exe  -o bin\Debug\SpineMiner.exe obj\Debug\database.o obj\Debug\dbscan.o obj\Debug\functions.o obj\Debug\helpers.o obj\Debug\kdtree.o obj\Debug\main.o obj\Debug\ovlreader.o obj\Debug\sqlite3.o -lgdi32
 *
 *
 * Usage:
@@ -68,6 +68,9 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+    //sleep: sorry but i had to implement this because WINDOWS console does not provide WaitForInputIdle functionality...
+    Sleep(1000);
+
     //Everything on cout will be logged in log.txt. See ioswitch.hpp
     //DeleteFile("log.txt");
     remove("log.txt");
