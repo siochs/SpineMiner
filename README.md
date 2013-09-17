@@ -157,7 +157,7 @@ As highlighted in `main.c` and in function `void ShowUsage()`, SpineMiner can be
     * SpineMiner.exe -w:<filename> --> tests the ovl files in the current working directory for consistency and reads content into database <filename>
     * SpineMiner.exe -w:<filename> -ignoremorphologies --> use this, if your spines have no morphology tags
     * SpineMiner.exe -w:<filename> -nofilopodia --> all as filopodia tagged spines will be treated as thin spines
-    
+    *
     * SpineMiner.exe -r:<filename> --> reads the database and showing dendrites and spines table
     * SpineMiner.exe -r:<filename> -calcsurvival:<imaging_timepoint> --> recalculates spine survival using <imaging_timepoint> as start (default = 1)
     * SpineMiner.exe -r:<filename> -calctransients:<period> --> recalculates transient spines by a given lifespan period (days) (default = 8)
@@ -169,13 +169,17 @@ As highlighted in `main.c` and in function `void ShowUsage()`, SpineMiner can be
     * SpineMiner.exe -r:<filename> -pipe:<filename2> --> Executes SQL commands in <filename2>. Results are stored in <filename2>.result.txt
     * SpineMiner.exe -r:<filename> -dbscan:<dendrite_id>,<epsilon>,<minPts> --> when * is used as dendrite_id all dendrites will calced with given eps and minPts
     * SpineMiner.exe -r:<filename> -quickdbscan --> runs a dbscan on all dendrites unsurvived.
-    
+    *
     * SpineMiner.exe -replace:<findstring>,<replacestring> --> find & replace for all ovl files in current working directory. BETA STATUS
-    
+    *
     * SpineMiner.exe -c:<filename> --> converts the database into csv format so it's readable for excel
-    
+    *
     * SpineMiner.exe -q:<filename> --> Open SQL session. Quit with "!q"
-        
+    * 
+    * SpineMiner.exe -outputtocerr --> Output is directed to cerr. File logging will be deactivated.
+
+
+       
 SpineMiner works in the CWD. So it has to be executed where your ovl-files are located. 
 
 ## Known Issues

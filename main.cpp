@@ -40,12 +40,14 @@
 * SpineMiner.exe -r:<filename> -dbscan:<dendrite_id>,<epsilon>,<minPts>
 *                                                           --> when * is used as dendrite_id all dendrites will calced with given eps and minPts
 * SpineMiner.exe -r:<filename> -quickdbscan                       --> runs a dbscan on all dendrites unsurvived.
-
+*
 * SpineMiner.exe -replace:<findstring>,<replacestring>            --> find & replace for all ovl files in current working directory
-
+*
 * SpineMiner.exe -c:<filename>                                    --> converts the database into csv format so it's readable for excel
-
+*
 * SpineMiner.exe -q:<filename>                                    --> Open SQL session. Quit with "!q"
+*
+* SpineMiner.exe -outputtocerr                                    --> Changes standard output to cerr. File logging will be disabled
 */
 
 #include <stdio.h>
@@ -62,26 +64,29 @@
 
 using namespace std;
 
-
+std::ofstream _stdoutput;
 
 //#include "functions.cpp"
 
 int main(int argc, char *argv[])
 {
-    //sleep: sorry but i had to implement this because WINDOWS console does not provide WaitForInputIdle functionality...
-    Sleep(1000);
+    // output normally cout
+    _stdoutput.copyfmt(std::cout);
+    _stdoutput.clear(std::cout.rdstate());
+    _stdoutput.basic_ios<char>::rdbuf(std::cout.rdbuf());
 
-    //Everything on cout will be logged in log.txt. See ioswitch.hpp
+    //Everything on _stdoutput will be logged in log.txt. See ioswitch.hpp
     //DeleteFile("log.txt");
     remove("log.txt");
 
     BEGIN_IOSWITCH;
 
-    string params[argc];    //params from command line
+    //string params[argc];    //params from command line
+    vector<string> params;
     char cwd[256];          //current working directory storage
 
-    cout << endl;
-    cout << VERSION_STR << endl;
+    _stdoutput << endl;
+    _stdoutput << VERSION_STR << endl;
 
     time_t tmStartTime;
     time(&tmStartTime);
@@ -91,8 +96,25 @@ int main(int argc, char *argv[])
         //trascribe parameters to string list
         for (int p = 0; p < argc; p++)
         {
-            params[p] = argv[p];
+            //everything will be piped through cerr, when -outputtocerr option is given
+            //this is needed when buffering of standard output is unwished, e.g. when interfacing with windows api
+            if ( strcmp("-outputtocerr" , argv[p]) == 0 )
+            {
+                _stdoutput.copyfmt(std::cerr);
+                _stdoutput.clear(std::cerr.rdstate());
+                _stdoutput.basic_ios<char>::rdbuf(std::cerr.rdbuf());
+                _stdoutput << "Info> Output will be bypassed to std::cerr. File logging disabled." << endl;
+            }
+            else
+            {
+                params.push_back(argv[p]);
+            }
+
+            //params[p] = argv[p];
+            //is param -outputtocerr?
         }
+
+        argc = params.size();
 
         //parse parameters
         if (params[1].find("-w:")!=string::npos)
@@ -109,7 +131,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                cout << "Error> The database file \"" << params[1] << "\" already exists or the specified name is not valid. " << endl;
+                _stdoutput << "Error> The database file \"" << params[1] << "\" already exists or the specified name is not valid. " << endl;
                 return 0;
             }
         }
@@ -127,14 +149,14 @@ int main(int argc, char *argv[])
                 //ShowTableDendrites(db);
                 if (!CheckFates(db))
                 {
-                    cout << "Error> Wrong spine fate assignments. Please check your overlays." << endl;
+                    _stdoutput << "Error> Wrong spine fate assignments. Please check your overlays." << endl;
                 }
-                else cout << "Info> Database test OK. No errors in spine fates found." << endl;
+                else _stdoutput << "Info> Database test OK. No errors in spine fates found." << endl;
                 db.Close();
             }
             else
             {
-                cout << "Error> The database file \"" << params[1] << "\" does not exist or the specified name is not valid. " << endl;
+                _stdoutput << "Error> The database file \"" << params[1] << "\" does not exist or the specified name is not valid. " << endl;
                 return 0;
             }
         }
@@ -157,7 +179,7 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
-                        cout << "Error> -calcsurvival parameter is not an integer or empty."<<endl;
+                        _stdoutput << "Error> -calcsurvival parameter is not an integer or empty."<<endl;
                         return 0;
                     }
                 }
@@ -167,7 +189,7 @@ int main(int argc, char *argv[])
                     params[2].replace(0,16,"");
                     if (params[2] != "" && _IsInt(params[2]))
                     {
-                        cout << "Info> Recalculation of transient spines where transient spines survive " << params[2] << " days max." << endl;
+                        _stdoutput << "Info> Recalculation of transient spines where transient spines survive " << params[2] << " days max." << endl;
                         Database db;
                         db.Open(params[1]);
                         CalcTransients(db, atoi(params[2].c_str()));
@@ -175,7 +197,7 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
-                        cout << "Error> -calctransients parameter is not an integer or empty."<<endl;
+                        _stdoutput << "Error> -calctransients parameter is not an integer or empty."<<endl;
                         return 0;
                     }
                 }
@@ -193,7 +215,7 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
-                        cout << "Error> -calcnewgained parameter is not an integer or empty."<<endl;
+                        _stdoutput << "Error> -calcnewgained parameter is not an integer or empty."<<endl;
                         return 0;
                     }
                 }
@@ -210,7 +232,7 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
-                        cout << "Error> -survival parameter is invalid."<<endl;
+                        _stdoutput << "Error> -survival parameter is invalid."<<endl;
                         return 0;
                     }
                 }
@@ -229,7 +251,7 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
-                        cout << "Error> at leat one parameter -trace option is invalid."<<endl;
+                        _stdoutput << "Error> at leat one parameter -trace option is invalid."<<endl;
                         return 0;
                     }
                 }
@@ -250,19 +272,19 @@ int main(int argc, char *argv[])
 
                     if (dendrite == "")
                     {
-                        cout << "Error> dendrite parameter for -dbscan option is invalid."<<endl;
+                        _stdoutput << "Error> dendrite parameter for -dbscan option is invalid."<<endl;
                         return 0;
                     }
 
                     if (!_IsDouble(eps) || _atof(eps) < 0.01)
                     {
-                        cout << "Error> eps parameter for -dbscan option is invalid."<<endl;
+                        _stdoutput << "Error> eps parameter for -dbscan option is invalid."<<endl;
                         return 0;
                     }
 
                     if(!_IsInt(minPts) || atoi(minPts.c_str()) <= 1)
                     {
-                        cout << "Error> minPts parameter for -dbscan option is invalid."<<endl;
+                        _stdoutput << "Error> minPts parameter for -dbscan option is invalid."<<endl;
                         return 0;
                     }
 
@@ -278,8 +300,8 @@ int main(int argc, char *argv[])
                 {
                         Database db;
                         db.Open(params[1]);
-                        if (!CheckFates(db)) cout << "Error> Wrong spine fate assignments. Please recheck your overlays to avoid statistical errors." << endl;
-                        else cout << "Info> Database clean. No errors in spine fates found." << endl;
+                        if (!CheckFates(db)) _stdoutput << "Error> Wrong spine fate assignments. Please recheck your overlays to avoid statistical errors." << endl;
+                        else _stdoutput << "Info> Database clean. No errors in spine fates found." << endl;
                         db.Close();
                 }
                 else
@@ -304,7 +326,7 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
-                        cout << "Error> -tor parameter is invalid."<<endl;
+                        _stdoutput << "Error> -tor parameter is invalid."<<endl;
                         return 0;
                     }
                 }
@@ -318,7 +340,7 @@ int main(int argc, char *argv[])
                         oname += ".result.txt";
                         if (_FileExists(params[2]) == false || _FileExists(oname) == true)
                         {
-                            cout << "Error> File \"" << params[2] << "\" does not exist or \"" << oname << "\" already exists." << endl;
+                            _stdoutput << "Error> File \"" << params[2] << "\" does not exist or \"" << oname << "\" already exists." << endl;
                             return 0;
                         }
 
@@ -329,20 +351,20 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
-                        cout << "Error> -pipe parameter is invalid."<<endl;
+                        _stdoutput << "Error> -pipe parameter is invalid."<<endl;
                         return 0;
                     }
                 }
                 else
                 {
-                    cout << "Error> Invalid option for parameter \"-r:\"" << endl;
+                    _stdoutput << "Error> Invalid option for parameter \"-r:\" " << params[2] << endl;
                     return 0;
                 }
 
             }
             else
             {
-                cout << "Error> The database file \"" << params[1] << "\" does not exist or the specified name is not valid. " << endl;
+                _stdoutput << "Error> The database file \"" << params[1] << "\" does not exist or the specified name is not valid. " << endl;
                 return 0;
             }
         }
@@ -359,7 +381,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                cout << "Error> The database file \"" << params[1] << "\" does not exist or the specified name is not valid. " << endl;
+                _stdoutput << "Error> The database file \"" << params[1] << "\" does not exist or the specified name is not valid. " << endl;
                 return 0;
             }
         }
@@ -376,7 +398,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                cout << "Error> The database file \"" << params[1] << "\" does not exist or the specified name is not valid. " << endl;
+                _stdoutput << "Error> The database file \"" << params[1] << "\" does not exist or the specified name is not valid. " << endl;
                 return 0;
             }
 
@@ -393,13 +415,13 @@ int main(int argc, char *argv[])
             }
             else
             {
-                cout << "Error> at leat one parameter -replace option is invalid or same."<<endl;
+                _stdoutput << "Error> at leat one parameter -replace option is invalid or same."<<endl;
                 return 0;
             }
         }
         else
         {
-            cout << "Error> Parameter not recognized." << endl;
+            _stdoutput << "Error> Parameter not recognized." << endl;
             return 0;
         }
     }
@@ -414,11 +436,11 @@ int main(int argc, char *argv[])
     time_t lTimeNow;
     time(&lTimeNow);
     time_t tsDuration = lTimeNow - tmStartTime;
-    cout << endl <<  "Info> Done in " << cwd << " after " << tsDuration << " seconds ";
-    if(tsDuration < 30) cout << ":-)";
-    if(tsDuration < 120 && tsDuration > 30) cout << ":-|";
-    if(tsDuration > 120) cout << ":-(";
-    cout << endl;
+    _stdoutput << endl <<  "Info> Done in " << cwd << " after " << tsDuration << " seconds ";
+    if(tsDuration < 30) _stdoutput << ":-)";
+    if(tsDuration < 120 && tsDuration > 30) _stdoutput << ":-|";
+    if(tsDuration > 120) _stdoutput << ":-(";
+    _stdoutput << endl;
 
     END_IOSWITCH;
 

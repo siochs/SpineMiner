@@ -1,5 +1,9 @@
 #include "functions.h"
 
+using namespace std;
+using namespace cimg_library;
+extern std::ofstream _stdoutput;
+
 //hope we don't have more then 48 clusters
 #define MAX_COLORS  37
 const unsigned char col[MAX_COLORS][3] =
@@ -46,29 +50,32 @@ const unsigned char col[MAX_COLORS][3] =
 
 void ShowUsage()
 {
-    cout << "Info> You may proceed using the following options. All outputs will be also available in \"log.txt\":" << endl;
-    cout << "SpineMiner.exe --> tests the ovl files in the current working directory for consistency." << endl;
-    cout << "\t-w:<filename> --> builds database from OVL files in the specified <filename>." << endl;
-    cout << "\t-w:<filename> -ignoremorphologies --> use this, if your spines have no morphology tags." << endl;
-    cout << "\t-w:<filename> -nofilopodia --> filopodia like spines will be counted as thin likes." << endl;
-    cout << endl;
-    cout << "\t-r:<filename> --> test database integrity and shows command line options." << endl;
-    cout << "\t-r:<filename> -calcsurvival:<imaging_timepoint> --> spine survival will be recalculated using <imaging_timepoint> as start (default = 1)." << endl;
-    cout << "\t-r:<filename> -calcnewgained:<imaging_timepoint> --> recalculates the survival of spines which were gained at <imaging_timepoint> (default = 2)" << endl;
-    cout << "\t-r:<filename> -calctransients:<max_lifetime> --> redetection of transient spines by a defined <max_lifetime> (default <= 8)." << endl;
-    cout << "\t-r:<filename> -survival:<dendrite_id> --> shows a foretaste of a survival courve for a specified <dendrite_id>." << endl;
-    cout << "\t-r:<filename> -trace:<dendrite_id>,<spine_id> --> shows the spine fate of specified by its <dendrite_id> and <spine_id>." << endl;
-    cout << "\t-r:<filename> -check --> test database integrity." << endl;
-    cout << "\t-r:<filename> -tor:<dendrite_id> --> shows the turnover rate of a dendrite specified by <dendrite_id>." << endl;
-    cout << "\t-r:<filename> -dbscan:<dendrite_id>,<epsilon>,<minPts> --> runs a dbscan on a specified <dendrite_id> (use \"*\" for all dendrites) using <epsilon> and <minPts> as algorithm parameters." << endl;
-    cout << "\t-r:<filename> -quickdbscan --> runs a dbscan on all dendrites unsurvived." << endl;
-    cout << "\t-r:<filename> -pipe:<sqlfile> --> batch processing of SQL statements stored in the specified <sqlfile>. The results will be stored in <sqlfile>.result.txt." << endl;
-    cout << endl;
-    cout << "\t-q:<filename> --> Opens a SQL session to accept statements. Quit with \"!q\"" << endl;
-    cout << endl;
-    cout << "\t-replace:<findstring>,<replacestring> --> find & replace for all ovl files in current working directory. Warning: function may causes data corruption (beta status)." << endl;
-    cout << endl;
-    cout << "\t-c:<filename> --> converts the database into a CSV-file which also contains dendrite, spine and spacial characteristics." << endl;
+    _stdoutput << "Info> You may proceed using the following options. All outputs will be also available in \"log.txt\":" << endl;
+    _stdoutput << "SpineMiner.exe --> tests the ovl files in the current working directory for consistency." << endl;
+    _stdoutput << "\t-w:<filename> --> builds database from OVL files in the specified <filename>." << endl;
+    _stdoutput << "\t-w:<filename> -ignoremorphologies --> use this, if your spines have no morphology tags." << endl;
+    _stdoutput << "\t-w:<filename> -nofilopodia --> filopodia like spines will be counted as thin likes." << endl;
+    _stdoutput << endl;
+    _stdoutput << "\t-r:<filename> --> test database integrity and shows command line options." << endl;
+    _stdoutput << "\t-r:<filename> -calcsurvival:<imaging_timepoint> --> spine survival will be recalculated using <imaging_timepoint> as start (default = 1)." << endl;
+    _stdoutput << "\t-r:<filename> -calcnewgained:<imaging_timepoint> --> recalculates the survival of spines which were gained at <imaging_timepoint> (default = 2)" << endl;
+    _stdoutput << "\t-r:<filename> -calctransients:<max_lifetime> --> redetection of transient spines by a defined <max_lifetime> (default <= 8)." << endl;
+    _stdoutput << "\t-r:<filename> -survival:<dendrite_id> --> shows a foretaste of a survival courve for a specified <dendrite_id>." << endl;
+    _stdoutput << "\t-r:<filename> -trace:<dendrite_id>,<spine_id> --> shows the spine fate of specified by its <dendrite_id> and <spine_id>." << endl;
+    _stdoutput << "\t-r:<filename> -check --> test database integrity." << endl;
+    _stdoutput << "\t-r:<filename> -tor:<dendrite_id> --> shows the turnover rate of a dendrite specified by <dendrite_id>." << endl;
+    _stdoutput << "\t-r:<filename> -dbscan:<dendrite_id>,<epsilon>,<minPts> --> runs a dbscan on a specified <dendrite_id> (use \"*\" for all dendrites) using <epsilon> and <minPts> as algorithm parameters." << endl;
+    _stdoutput << "\t-r:<filename> -quickdbscan --> runs a dbscan on all dendrites unsurvived." << endl;
+    _stdoutput << "\t-r:<filename> -pipe:<sqlfile> --> batch processing of SQL statements stored in the specified <sqlfile>. The results will be stored in <sqlfile>.result.txt." << endl;
+    _stdoutput << endl;
+    _stdoutput << "\t-q:<filename> --> Opens a SQL session to accept statements. Quit with \"!q\"" << endl;
+    _stdoutput << endl;
+    _stdoutput << "\t-replace:<findstring>,<replacestring> --> find & replace for all ovl files in current working directory. Warning: function may causes data corruption (beta status)." << endl;
+    _stdoutput << endl;
+    _stdoutput << "\t-c:<filename> --> converts the database into a CSV-file which also contains dendrite, spine and spacial characteristics." << endl;
+    _stdoutput << endl;
+    _stdoutput << "\t-outputtocerr --> Output is directed to cerr. File logging will be deactivated." << endl;
+
     return;
 }
 
@@ -89,21 +96,21 @@ void FindReplace(string find, string replace)
     } c;
 
     filenames = _FindFilesInCWD(".ovl");
-//    for (int i = 0; i < filenames.size(); i++) cout << filenames[i] << endl;
+//    for (int i = 0; i < filenames.size(); i++) _stdoutput << filenames[i] << endl;
 
 
     //maximum length of 20 chars allowed
     if (find.length() > 20 || replace.length() > 20)
     {
-        cout << "Error> Find- or replace string > 20 characters. Stopped." << endl;
+        _stdoutput << "Error> Find- or replace string > 20 characters. Stopped." << endl;
         return;
     }
 
     //hope we got files...
     if (filenames.size() == 0)
     {
-        cout << endl << O.LastError.str();
-        cout << "Info> Spinecounter stopped." << endl;
+        _stdoutput << endl << O.LastError.str();
+        _stdoutput << "Info> Spinecounter stopped." << endl;
         return;
     }
 
@@ -113,7 +120,7 @@ void FindReplace(string find, string replace)
         is.open(filenames[n].c_str(), ios::binary | ios::in );
         if (is.fail() || os.fail())
         {
-            cout << "Error> Cannot open file " << filenames[n] << endl;
+            _stdoutput << "Error> Cannot open file " << filenames[n] << endl;
             return;
         }
 
@@ -186,7 +193,7 @@ void FindReplace(string find, string replace)
 
             //also remark at position pos - 252 the new letter count:
             data[pos - 252] = vreplace.size() + 1;
-            cout << "Info> \"" << find << "\" in \"" << filenames[n] <<"\" at position " << pos << " was replaced with \"" << replace << "\"" << endl;
+            _stdoutput << "Info> \"" << find << "\" in \"" << filenames[n] <<"\" at position " << pos << " was replaced with \"" << replace << "\"" << endl;
 
             //search again
             it = std::search (data.begin(), data.end(), vfind.begin(), vfind.end());
@@ -195,7 +202,7 @@ void FindReplace(string find, string replace)
 
         if (replaced == false)
         {
-            cout << "Info> No match for \"" << find << "\" found in \"" << filenames[n] <<"\". Skipped." << endl;
+            _stdoutput << "Info> No match for \"" << find << "\" found in \"" << filenames[n] <<"\". Skipped." << endl;
         }
 
         os.write(reinterpret_cast<char*>(&data[0]), data.size()); //store data array back to tmpfile
@@ -245,7 +252,7 @@ void SQLPipe(string filename, Database &db)
     o.close();
     i.close();
 
-    cout << "Info> SQL pipe complete. Results stored in \"" << filename << ".result.txt\"." << endl;
+    _stdoutput << "Info> SQL pipe complete. Results stored in \"" << filename << ".result.txt\"." << endl;
     db.protect_db = false;
     return;
 }
@@ -253,7 +260,7 @@ void SQLPipe(string filename, Database &db)
 //exits this program
 void Quit()
 {
-    cout << endl << endl << "--- ABORTED ANALYSIS --- " << endl << endl;
+    _stdoutput << endl << endl << "--- ABORTED ANALYSIS --- " << endl << endl;
     //file.close();
     //Sleep(1000);
     exit(-1);
@@ -266,7 +273,7 @@ void Quit()
 void UpdateDB(Database &db)
 {
     /*
-    cout << "Info> Updating database...";
+    _stdoutput << "Info> Updating database...";
     db.Query(""
     "UPDATE dendrites SET frac_transient_spines = 100 * (CAST(transient_spines AS DOUBLE)) / (gained_spines + stable_spines), "
     "frac_gained_filopodia = 100 * (CAST(gained_filopodia AS DOUBLE)) / (gained_spines + stable_spines), "
@@ -288,7 +295,7 @@ void UpdateDB(Database &db)
     "frac_lost_transient_stubbies = 100 * (CAST(lost_transient_stubbies AS DOUBLE)) / (gained_spines + stable_spines)"
 
      ";");
-    cout << "." << endl;
+    _stdoutput << "." << endl;
     */
     return;
 }
@@ -296,7 +303,7 @@ void UpdateDB(Database &db)
 //a spine is seen as regained when it appears at the same location again. Note: this necessarily is NOT the same spine. You won't be able to proof that
 void CalcRegainedSpines(Database &db)
 {
-   cout << "Info> Calculating regained spines." << endl;
+   _stdoutput << "Info> Calculating regained spines." << endl;
 
    string Query;
    string fate = "";
@@ -365,7 +372,7 @@ void CalcRegainedSpines(Database &db)
                     Query += r_days[k][0];
                     Query += ";";
                     db.Query(Query);
-                    cout << "Info> Marked spine \"" << r_allgained[l][0] << "\" from dendrite \"" << r_ids[j][0] << "\" gained at day "<< r_days[k][0] <<" as regained spine." << endl;
+                    _stdoutput << "Info> Marked spine \"" << r_allgained[l][0] << "\" from dendrite \"" << r_ids[j][0] << "\" gained at day "<< r_days[k][0] <<" as regained spine." << endl;
                 }
                 else
                 continue;
@@ -450,20 +457,20 @@ void CalcShapeshiftingFrequency(Database &db)
                 Query += r_days[j][0];
                 Query += ";";
                 db.Query(Query);
-                cout << "\rInfo> Calculating shapeshifting frequency of dendrite " << r_ids[i][0] << " at day " << r_days[j][0] << "   ";
-                //cout << "\rInfo> Performed queries: " << db.QueryCount;
+                _stdoutput << "\rInfo> Calculating shapeshifting frequency of dendrite " << r_ids[i][0] << " at day " << r_days[j][0] << "   ";
+                //_stdoutput << "\rInfo> Performed queries: " << db.QueryCount;
             }
 
         }
         else
         {
-                cout << "Warning> Cannot calculate the shapeshifting frequency for dendrite_id \"" << r_ids[i][0] << "\". Skipped" << endl;
+                _stdoutput << "Warning> Cannot calculate the shapeshifting frequency for dendrite_id \"" << r_ids[i][0] << "\". Skipped" << endl;
                 continue;
         }
 
     }
 
-    cout << endl;
+    _stdoutput << endl;
 
     return;
 }
@@ -472,7 +479,7 @@ void CalcShapeshiftingFrequency(Database &db)
 /*
 void CalcTransientGainedLostMorphs(Database &db)
 {
-    cout << "Info> Calculating now which morphologies the transient spines have." << endl;
+    _stdoutput << "Info> Calculating now which morphologies the transient spines have." << endl;
 
     db.Query("UPDATE dendrites SET gained_transient_filopodia = 0, gained_transient_mushrooms = 0, gained_transient_thins = 0, gained_transient_stubbies = 0, transient_filopodia = 0, transient_mushrooms = 0, transient_thins = 0, transient_stubbies = 0;");
 
@@ -711,16 +718,16 @@ void CalcTransientGainedLostMorphs(Database &db)
                 Query += r_tmp[0][1];
                 Query += ";";
                 db.Query(Query);
-                //cout << Query << endl;
+                //_stdoutput << Query << endl;
             }
         }
         */
 
 /*
-        cout << "\rInfo> Performed queries: " << db.QueryCount;
+        _stdoutput << "\rInfo> Performed queries: " << db.QueryCount;
     }
 
-    cout << endl;
+    _stdoutput << endl;
 
     return;
 }*/
@@ -729,7 +736,7 @@ void CalcTransientGainedLostMorphs(Database &db)
 /*
 void CalcGainedLostMorphs(Database &db)
 {
-    cout << "Info> Calculating now which morphologies the spines have." << endl;
+    _stdoutput << "Info> Calculating now which morphologies the spines have." << endl;
 
     //do we need to reset the columns here?
 
@@ -970,13 +977,13 @@ void CalcGainedLostMorphs(Database &db)
                 Query += r_tmp[0][1];
                 Query += ";";
                 db.Query(Query);
-                //cout << Query << endl;
+                //_stdoutput << Query << endl;
             }
         }*/
 
-       /* cout << "\rInfo> Performed queries: " << db.QueryCount;
+       /* _stdoutput << "\rInfo> Performed queries: " << db.QueryCount;
     }
-    cout << endl;
+    _stdoutput << endl;
 
     return;
 }*/
@@ -1005,7 +1012,7 @@ void WriteSum(Database &db, fstream &f, string identifier)
 
    if (r_ids.size() == 0 || r_days.size() == 0)
    {
-        cout << "Error> Export failure." << endl;
+        _stdoutput << "Error> Export failure." << endl;
         Quit();
    }
 
@@ -1055,7 +1062,7 @@ void WriteSum(Database &db, fstream &f, string identifier)
         }
         iQuery += ");";
         db.Query(iQuery);
-        //cout << "\rInfo> Converted dendrite " << db.QueryCount;
+        //_stdoutput << "\rInfo> Converted dendrite " << db.QueryCount;
    }
    string header = db.GetTableHeader("tmp_sum",';');
    f << "Summary " << identifier << ";" << endl;
@@ -1073,7 +1080,7 @@ void WriteSum(Database &db, fstream &f, string identifier)
 
    db.Query("DROP TABLE tmp_sum;");
    f << endl << endl;
-   cout << "\rInfo> " << f.tellp() << " bytes written...";
+   _stdoutput << "\rInfo> " << f.tellp() << " bytes written...";
 
     return;
 }
@@ -1081,7 +1088,7 @@ void WriteSum(Database &db, fstream &f, string identifier)
 void WriteRegainedSpineData(Database &db, fstream &f)
 {
         //export the latency times for each dendrite
-    cout << "Info> Building regained spines latencies..." << endl;
+    _stdoutput << "Info> Building regained spines latencies..." << endl;
     vector<vector<string> > l;
     vector<string> t;
     dbResults r_regained, r_fate, r_ids;
@@ -1134,12 +1141,12 @@ void WriteRegainedSpineData(Database &db, fstream &f)
             if (!end_of_list)
             {
                 delta = _atoi(r_regained[j][1]) - _atoi(daylost);
-                //cout << "Info> spine " << r_regained[j][0] << " regained at day " << r_regained[j][1] << " and last seen lost at day " << daylost << " has latency of " << delta << endl;
+                //_stdoutput << "Info> spine " << r_regained[j][0] << " regained at day " << r_regained[j][1] << " and last seen lost at day " << daylost << " has latency of " << delta << endl;
                 t.push_back(_itoa(delta));
             }
             else
             {
-                //cout << "Info> latency for spine " << r_regained[j][0] << " regained at day " << r_regained[j][1] << " cannot be determined. " << endl;
+                //_stdoutput << "Info> latency for spine " << r_regained[j][0] << " regained at day " << r_regained[j][1] << " cannot be determined. " << endl;
             }
         }
         l.push_back(t);
@@ -1161,7 +1168,7 @@ void WriteRegainedSpineData(Database &db, fstream &f)
     l.clear();
 
     //get the lifetime of regained spines
-    cout << "Info> Building regained spines lifetimes..." << endl;
+    _stdoutput << "Info> Building regained spines lifetimes..." << endl;
     for (vInt i = 0; i < r_ids.size(); i++)
     {
 
@@ -1207,12 +1214,12 @@ void WriteRegainedSpineData(Database &db, fstream &f)
             if (!end_of_list)
             {
                     delta = _atoi(daylost) - _atoi(r_regained[j][1]);
-                    //cout << "Info> spine " << r_regained[j][0] << " regained at day " << r_regained[j][1] << " and was lost at day " << daylost << " has lifetime of " << delta << endl;
+                    //_stdoutput << "Info> spine " << r_regained[j][0] << " regained at day " << r_regained[j][1] << " and was lost at day " << daylost << " has lifetime of " << delta << endl;
                     t.push_back(_itoa(delta));
             }
             else
             {
-                    //cout << "Info> spine lifetime for spine " << r_regained[j][0] << " regained at day " << r_regained[j][1] << " cannot be determined. " << endl;
+                    //_stdoutput << "Info> spine lifetime for spine " << r_regained[j][0] << " regained at day " << r_regained[j][1] << " cannot be determined. " << endl;
             }
         }
         l.push_back(t);
@@ -1234,7 +1241,7 @@ void WriteRegainedSpineData(Database &db, fstream &f)
     l.clear();
 
     //what are the morphologies of regained spines?
-    cout << "Info> Building regained spines morphologies..." << endl;
+    _stdoutput << "Info> Building regained spines morphologies..." << endl;
     for (vInt i = 0; i < r_ids.size(); i++)
     {
 
@@ -1298,7 +1305,7 @@ void WriteClusterData(Database &db, fstream &f)
     vector<string> t;
     vector<vector<string> > l;
 
-    cout << "Info> Writing cluster/distance data..." << endl;
+    _stdoutput << "Info> Writing cluster/distance data..." << endl;
     dbResults r_ids = db.Query("SELECT DISTINCT dendrite_id FROM dendrites ORDER BY dendrite_id;");
     dbResults r_dist;
 
@@ -1360,7 +1367,7 @@ void WriteClusterData(Database &db, fstream &f)
 void Convert(Database &db, string filename)
 {
     UpdateDB(db);
-    cout << "Info> Running conversion to csv format." << endl;
+    _stdoutput << "Info> Running conversion to csv format." << endl;
     string header = db.GetTableHeader("dendrites",';');
 
     dbResults r_ids = db.Query("SELECT DISTINCT dendrite_id FROM dendrites ORDER BY dendrite_id;");
@@ -1375,7 +1382,7 @@ void Convert(Database &db, string filename)
 
     if (r_ids.size() == 0)
     {
-        cout << "Error> Empty table in" << filename << endl;
+        _stdoutput << "Error> Empty table in" << filename << endl;
         return;
     }
 
@@ -1387,12 +1394,12 @@ void Convert(Database &db, string filename)
     f.open(Ofilename.c_str(), ios::out);
     if (f.fail())
     {
-        cout << "Error> cannot access \"" << Ofilename <<"\". File already open?" << endl;
+        _stdoutput << "Error> cannot access \"" << Ofilename <<"\". File already open?" << endl;
         Quit();
     }
 
     //write summaries as you like them being exported
-    cout << "Info> Writing dendrite data summaries..." << endl;
+    _stdoutput << "Info> Writing dendrite data summaries..." << endl;
     f << "Spine density:;" << endl;
     WriteSum(db, f, "spine_density");
 
@@ -1525,14 +1532,14 @@ void Convert(Database &db, string filename)
     f << "Ratio regained/gained:;" << endl;
     WriteSum(db, f, "regained_spines/CAST(gained_spines AS DOUBLE)");
 
-    cout << endl;
+    _stdoutput << endl;
 
     WriteRegainedSpineData(db, f);
     WriteClusterData(db, f);
 
 
     //we're done with the summaries. now export the details
-    cout << "Info> Writing details..." << endl;
+    _stdoutput << "Info> Writing details..." << endl;
     f << endl;
     for (vInt i = 0; i < r_ids.size(); i++)
     {
@@ -1596,11 +1603,11 @@ void Convert(Database &db, string filename)
         }
 
         f << endl << endl << endl << endl;
-        cout << "\rInfo> " << f.tellp() << " bytes written... ";
+        _stdoutput << "\rInfo> " << f.tellp() << " bytes written... ";
     }
 
     f.close();
-    cout << endl << "Info> \"" << Ofilename << "\" Created." << endl;
+    _stdoutput << endl << "Info> \"" << Ofilename << "\" Created." << endl;
 
     return;
 }
@@ -1619,7 +1626,7 @@ string TraceFate(string spine_id, string dendrite_id, Database &db, bool showres
 
     if (r.size() == 0)
     {
-        cout << "Error> Spine \""<<spine_id<<"\" in dendrite \""<<dendrite_id<<"\" not found in the database." << endl;
+        _stdoutput << "Error> Spine \""<<spine_id<<"\" in dendrite \""<<dendrite_id<<"\" not found in the database." << endl;
         return "Error> An error occured in procedure TraceFate(...);\n";
     }
 
@@ -1627,36 +1634,36 @@ string TraceFate(string spine_id, string dendrite_id, Database &db, bool showres
     if (showresults)
     {
         //print a plot of the spine fate
-        cout << "Info> Fate trace of spine \""<<spine_id<<"\" in dendrite \""<<dendrite_id<<"\":" << endl;
+        _stdoutput << "Info> Fate trace of spine \""<<spine_id<<"\" in dendrite \""<<dendrite_id<<"\":" << endl;
 
-        cout << endl << "     ";
+        _stdoutput << endl << "     ";
         for (vInt i = 0; i < r.size(); i++)
         {
-            //cout << (char) 218;
-            cout << ".";
-            cout << r[i][1];
-            if (atoi(r[i][1].c_str()) < 10)  cout << "    ";
-            if (atoi(r[i][1].c_str()) > 9 && atoi(r[i][1].c_str()) < 100) cout << "   ";
-            if (atoi(r[i][1].c_str()) > 99 && atoi(r[i][1].c_str()) < 1000) cout << "  ";
-            if (atoi(r[i][1].c_str()) > 999) cout << " ";
+            //_stdoutput << (char) 218;
+            _stdoutput << ".";
+            _stdoutput << r[i][1];
+            if (atoi(r[i][1].c_str()) < 10)  _stdoutput << "    ";
+            if (atoi(r[i][1].c_str()) > 9 && atoi(r[i][1].c_str()) < 100) _stdoutput << "   ";
+            if (atoi(r[i][1].c_str()) > 99 && atoi(r[i][1].c_str()) < 1000) _stdoutput << "  ";
+            if (atoi(r[i][1].c_str()) > 999) _stdoutput << " ";
         }
-        cout << endl << "     ";
+        _stdoutput << endl << "     ";
         for (vInt i = 0; i < r.size(); i++)
         {
-            cout << r[i][0][0];
-            /*cout << (char) 196;
-            cout << (char) 196;
-            cout << (char) 196;
-            cout << (char) 196;
-            cout << (char) 196;*/
-            cout << "-";
-            cout << "-";
-            cout << "-";
-            cout << "-";
-            cout << "-";
+            _stdoutput << r[i][0][0];
+            /*_stdoutput << (char) 196;
+            _stdoutput << (char) 196;
+            _stdoutput << (char) 196;
+            _stdoutput << (char) 196;
+            _stdoutput << (char) 196;*/
+            _stdoutput << "-";
+            _stdoutput << "-";
+            _stdoutput << "-";
+            _stdoutput << "-";
+            _stdoutput << "-";
 
         }
-        cout << ">" << endl << endl << endl;
+        _stdoutput << ">" << endl << endl << endl;
     }
     else
     {
@@ -1679,13 +1686,13 @@ void RetrieveFilesFromDendrite(Database &db, string dendrite_id)
 
     if (r.size() == 0)
     {
-        cout << "Error> No filename association found for dendrite \"" << dendrite_id << "\"." << endl;
+        _stdoutput << "Error> No filename association found for dendrite \"" << dendrite_id << "\"." << endl;
         return;
     }
 
     for (vInt i = 0; i < r.size(); i++)
     {
-        cout << "Info> Day " << r[i][0] << ":\t" << r[i][1] << endl;
+        _stdoutput << "Info> Day " << r[i][0] << ":\t" << r[i][1] << endl;
     }
 
     return;
@@ -1695,7 +1702,7 @@ void RetrieveFilesFromDendrite(Database &db, string dendrite_id)
 //NONO's are: gained -> gained || lost -> stable || stable -> gained. lost -> gained is okay, because it could be a regained one.
 bool CheckFates(Database &db)
 {
-    cout << "Info> Checking spine fates..." << endl;
+    _stdoutput << "Info> Checking spine fates..." << endl;
     bool ret = true;
     string fate = "";
     string Query;
@@ -1707,27 +1714,27 @@ bool CheckFates(Database &db)
         fate = TraceFate(r[i][0], r[i][1], db, false);
         if (fate.find("ls")!=string::npos)
         {
-            cout << "Error> Spine fate assignment faulty: a spine cannot be classified as stable when it was lost before (dendrite id=\""<<r[i][1]<<"\", spine id=\""<<r[i][0]<<"\", spine fate=\""<<fate<<"\")" << endl;
+            _stdoutput << "Error> Spine fate assignment faulty: a spine cannot be classified as stable when it was lost before (dendrite id=\""<<r[i][1]<<"\", spine id=\""<<r[i][0]<<"\", spine fate=\""<<fate<<"\")" << endl;
             TraceFate(r[i][0], r[i][1], db, true);
-            cout << "Info> Please check the following files:" << endl;
+            _stdoutput << "Info> Please check the following files:" << endl;
             RetrieveFilesFromDendrite(db, r[i][1]);
             ret = false;
         }
 
         if (fate.find("sg")!=string::npos)
         {
-            cout << "Error> Spine fate assignment faulty: a spine cannot be classified as gained when it was stable before (dendrite id=\""<<r[i][1]<<"\", spine id=\""<<r[i][0]<<"\", spine fate=\""<<fate<<"\")" << endl;
+            _stdoutput << "Error> Spine fate assignment faulty: a spine cannot be classified as gained when it was stable before (dendrite id=\""<<r[i][1]<<"\", spine id=\""<<r[i][0]<<"\", spine fate=\""<<fate<<"\")" << endl;
             TraceFate(r[i][0], r[i][1], db, true);
-            cout << "Info> Please check the following files:" << endl;
+            _stdoutput << "Info> Please check the following files:" << endl;
             RetrieveFilesFromDendrite(db, r[i][1]);
             ret = false;
         }
 
         if (fate.find("gg")!=string::npos)
         {
-            cout << "Error> Spine fate assignment faulty: a spine cannot be classified as gained when it was gained before (dendrite id=\""<<r[i][1]<<"\", spine id=\""<<r[i][0]<<"\", spine fate=\""<<fate<<"\")" << endl;
+            _stdoutput << "Error> Spine fate assignment faulty: a spine cannot be classified as gained when it was gained before (dendrite id=\""<<r[i][1]<<"\", spine id=\""<<r[i][0]<<"\", spine fate=\""<<fate<<"\")" << endl;
             TraceFate(r[i][0], r[i][1], db, true);
-            cout << "Info> Please check the following files:" << endl;
+            _stdoutput << "Info> Please check the following files:" << endl;
             RetrieveFilesFromDendrite(db, r[i][1]);
             ret = false;
         }
@@ -1735,9 +1742,9 @@ bool CheckFates(Database &db)
         //if you would like to disable the possibility, that spines can be regained you may should adapt the following section
         /*if (fate.find("lg")!=string::npos)
         {
-            cout << "Error> Spine fate assignment faulty: a spine cannot be classified as gained whn it was lost before (dendrite id=\""<<r[i][1]<<"\", spine id=\""<<r[i][0]<<"\", spine fate=\""<<fate<<"\")" << endl;
+            _stdoutput << "Error> Spine fate assignment faulty: a spine cannot be classified as gained whn it was lost before (dendrite id=\""<<r[i][1]<<"\", spine id=\""<<r[i][0]<<"\", spine fate=\""<<fate<<"\")" << endl;
             TraceFate(r[i][0], r[i][1], db, true);
-            cout << "Info> Please check the following files:" << endl;
+            _stdoutput << "Info> Please check the following files:" << endl;
             RetrieveFilesFromDendrite(db, r[i][1]);
             ret = true;
         }*/
@@ -1765,12 +1772,12 @@ void PrintTor(string dendrite_id, Database &db)
 
     if (r.size() == 0)
     {
-        cout << "Error> No data retrievable for dendrite id \""<<dendrite_id<<"\"" << endl;
+        _stdoutput << "Error> No data retrievable for dendrite id \""<<dendrite_id<<"\"" << endl;
         return;
     }
 
-    cout << "Info> Turnover rates for dendrite \""<<dendrite_id<<"\":"<< endl << endl;
-    cout << "Day\tTOR" << endl;
+    _stdoutput << "Info> Turnover rates for dendrite \""<<dendrite_id<<"\":"<< endl << endl;
+    _stdoutput << "Day\tTOR" << endl;
     db.ShowLastResults();
 
     return;
@@ -1789,40 +1796,40 @@ void PrintSurvival(string dendrite_id, Database &db)
 
     if (r.size() == 0)
     {
-        cout << "Error> Cannot print survival for dendrite \""<<dendrite_id<<"\": dendrite not found in the database." << endl;
+        _stdoutput << "Error> Cannot print survival for dendrite \""<<dendrite_id<<"\": dendrite not found in the database." << endl;
         return;
     }
 
 
-    cout << "Info> Survival courve of dendrite \""<<dendrite_id<<"\":" << endl;
-    //cout <<endl<< "     " << (char) 179 << endl;
-    cout <<endl<< "     " << "|" << endl;
+    _stdoutput << "Info> Survival courve of dendrite \""<<dendrite_id<<"\":" << endl;
+    //_stdoutput <<endl<< "     " << (char) 179 << endl;
+    _stdoutput <<endl<< "     " << "|" << endl;
     for (vInt i = 0; i < r.size(); i++)
     {
 
-        if (atoi(r[i][1].c_str()) < 10)  cout << "    ";
-        if (atoi(r[i][1].c_str()) > 9 && atoi(r[i][1].c_str()) < 100) cout << "   ";
-        if (atoi(r[i][1].c_str()) > 99 && atoi(r[i][1].c_str()) < 1000) cout << "  ";
-        if (atoi(r[i][1].c_str()) > 999) cout << " ";
+        if (atoi(r[i][1].c_str()) < 10)  _stdoutput << "    ";
+        if (atoi(r[i][1].c_str()) > 9 && atoi(r[i][1].c_str()) < 100) _stdoutput << "   ";
+        if (atoi(r[i][1].c_str()) > 99 && atoi(r[i][1].c_str()) < 1000) _stdoutput << "  ";
+        if (atoi(r[i][1].c_str()) > 999) _stdoutput << " ";
 
-        //cout << r[i][1] << (char) 180;
-        cout << r[i][1] << "|";
+        //_stdoutput << r[i][1] << (char) 180;
+        _stdoutput << r[i][1] << "|";
         for (int j = 0; j < atoi(r[i][0].c_str())/10; j++)
-            //cout << (char)178;
-            cout << "#";
-        cout << endl;
+            //_stdoutput << (char)178;
+            _stdoutput << "#";
+        _stdoutput << endl;
     }
-    //cout << "     " << (char) 195;
-    cout << "     " << "+";
-    //for (int i = 0; i < 4; i++) cout <<  (char) 196;
-    for (int i = 0; i < 4; i++) cout <<  "-";
-    //cout << (char) 194;
-    cout << "+";
-    //for (int i = 0; i < 4; i++) cout <<  (char) 196;
-    for (int i = 0; i < 4; i++) cout <<  "-";
-    //cout << (char) 194 << (char) 196 << (char) 196<<(char) 196 <<  endl;
-    cout << "+" << "-" << "-" << "-" <<  endl;
-    cout << "     0%   50%  100%" << endl << endl << endl;
+    //_stdoutput << "     " << (char) 195;
+    _stdoutput << "     " << "+";
+    //for (int i = 0; i < 4; i++) _stdoutput <<  (char) 196;
+    for (int i = 0; i < 4; i++) _stdoutput <<  "-";
+    //_stdoutput << (char) 194;
+    _stdoutput << "+";
+    //for (int i = 0; i < 4; i++) _stdoutput <<  (char) 196;
+    for (int i = 0; i < 4; i++) _stdoutput <<  "-";
+    //_stdoutput << (char) 194 << (char) 196 << (char) 196<<(char) 196 <<  endl;
+    _stdoutput << "+" << "-" << "-" << "-" <<  endl;
+    _stdoutput << "     0%   50%  100%" << endl << endl << endl;
 
     return;
 }
@@ -1831,7 +1838,7 @@ void PrintSurvival(string dendrite_id, Database &db)
 //get the number of stable spines and watch how many of them still exist at later time points
 void CalcSurvival(Database &db, int imaging_tp)
 {
-    cout << "Info> Calculating the spine survival using imaging timepoint " << _itoa(imaging_tp + 1) << " as start." << endl;
+    _stdoutput << "Info> Calculating the spine survival using imaging timepoint " << _itoa(imaging_tp + 1) << " as start." << endl;
 
     //reset column
     db.Query("UPDATE dendrites SET frac_survival = NULL;");
@@ -1857,7 +1864,7 @@ void CalcSurvival(Database &db, int imaging_tp)
         r_days = db.Query(Query);
         if (imaging_tp + 1 > atoi(r_days[0][0].c_str()))
         {
-            cout << "Error> Cannot calculate with imaging entrypoint " << _itoa(imaging_tp + 1) << " when only " << r_days[0][0] << " timepoints available for dendrite \"" << r_ids[i][0] << "\". Skipped." << endl;
+            _stdoutput << "Error> Cannot calculate with imaging entrypoint " << _itoa(imaging_tp + 1) << " when only " << r_days[0][0] << " timepoints available for dendrite \"" << r_ids[i][0] << "\". Skipped." << endl;
             continue;
         }
 
@@ -1875,7 +1882,7 @@ void CalcSurvival(Database &db, int imaging_tp)
         //hopefully, there will be some results and stable spines
         if (r_days.size() == 0 || r_days[0][1] == "0")
         {
-            cout << endl << "Warning> Cannot calculate the spine survival at imaging timepoint " << _itoa(imaging_tp + 1) << " for dendrite_id \"" << r_ids[i][0] << "\" having " << r_days[0][1] << " stable spines. Skipped." << endl;
+            _stdoutput << endl << "Warning> Cannot calculate the spine survival at imaging timepoint " << _itoa(imaging_tp + 1) << " for dendrite_id \"" << r_ids[i][0] << "\" having " << r_days[0][1] << " stable spines. Skipped." << endl;
             continue;
         }
 
@@ -1927,7 +1934,7 @@ void CalcSurvival(Database &db, int imaging_tp)
             Query += ";";
             db.Query(Query);
 
-            //cout << "\rInfo> Performed queries: " << db.QueryCount;
+            //_stdoutput << "\rInfo> Performed queries: " << db.QueryCount;
        }
 
     //PrintSurvival(r_ids[i][0], db);
@@ -1936,7 +1943,7 @@ void CalcSurvival(Database &db, int imaging_tp)
 
     UpdateDB(db);
 
-    //cout << endl;
+    //_stdoutput << endl;
 
     return;
 }
@@ -1944,7 +1951,7 @@ void CalcSurvival(Database &db, int imaging_tp)
 
 void CalcMorphs(Database &db)
 {
-    //cout << "Info> Building morphology database for " << endl;
+    //_stdoutput << "Info> Building morphology database for " << endl;
     string Query;
     string types[4] = {"gained", "stable", "gained", "stable"}; //g
     string morphs[4] = {"filopodia", "mushrooms", "thins", "stubbies"}; //h
@@ -2005,12 +2012,12 @@ void CalcMorphs(Database &db)
                     Query += r_days[j][0];
                     Query += ";";
                     db.Query(Query);
-                    //cout << Query << endl;
+                    //_stdoutput << Query << endl;
                 }
             }
-            cout << "\rInfo> Building morphology database for " << types[g] << " ";
-            if (g > 1) cout << "transient ";
-            cout << morphs[h] << "    ";
+            _stdoutput << "\rInfo> Building morphology database for " << types[g] << " ";
+            if (g > 1) _stdoutput << "transient ";
+            _stdoutput << morphs[h] << "    ";
         }
     }
 
@@ -2044,7 +2051,7 @@ void CalcMorphs(Database &db)
                         //if (g > 0) Query += " AND is_transient = 1";
                         Query += ";";
                         r_losts = db.Query(Query);
-                        //cout << Query << endl;
+                        //_stdoutput << Query << endl;
 
                         //for each lost spine
                         for (vInt k = 0; k < r_losts.size(); k++)
@@ -2087,14 +2094,14 @@ void CalcMorphs(Database &db)
                         db.Query(Query);
                         counter = 0;
                         transient_counter = 0;
-                        //cout << Query << endl;
+                        //_stdoutput << Query << endl;
                     }
                 }
-                cout << "\rInfo> Building morphology database for lost (transient) " << morphs[h] << "    ";
+                _stdoutput << "\rInfo> Building morphology database for lost (transient) " << morphs[h] << "    ";
         }
 
     }
-    cout << endl;
+    _stdoutput << endl;
 
 
 
@@ -2336,13 +2343,13 @@ void CalcMorphs(Database &db)
                 Query += r_tmp[0][1];
                 Query += ";";
                 db.Query(Query);
-                //cout << Query << endl;
+                //_stdoutput << Query << endl;
             }
         }*/
 /*
-        cout << "\rInfo> Performed queries: " << db.QueryCount;
+        _stdoutput << "\rInfo> Performed queries: " << db.QueryCount;
     }
-    cout << endl;
+    _stdoutput << endl;
 
     return;*/
 
@@ -2364,7 +2371,7 @@ void CalcTransients(Database &db, int transients_period)
     dbResults r_tmp;
     int lifetime;
 
-    cout << "Info> Calculating now amount of transient spines using a maximum lifespan of " << transients_period << " days." << endl;
+    _stdoutput << "Info> Calculating now amount of transient spines using a maximum lifespan of " << transients_period << " days." << endl;
 
     //reset db
     db.Query("UPDATE dendrites SET transient_spines = -1;");
@@ -2375,7 +2382,7 @@ void CalcTransients(Database &db, int transients_period)
     r_gained = db.Query(Query);
     if (r_gained.size() == 0)
     {
-        cout << "Error> Cannot find any gained spines for the calculation of transients." << endl;
+        _stdoutput << "Error> Cannot find any gained spines for the calculation of transients." << endl;
         return;
     }
 
@@ -2398,7 +2405,7 @@ void CalcTransients(Database &db, int transients_period)
             if (lifetime <= transients_period && lifetime > 0)
             {
                 //this one is transient. Mark this in the spine table as long it is alive
-                cout << "Info> Spine \"" << r_gained[i][0] << "\" on dendrite \"" << r_gained[i][1] << "\" gained on day "<< r_gained[i][2] <<" and lost on day " << r_lost[0][0] << " has been detected as transient spine." << endl;
+                _stdoutput << "Info> Spine \"" << r_gained[i][0] << "\" on dendrite \"" << r_gained[i][1] << "\" gained on day "<< r_gained[i][2] <<" and lost on day " << r_lost[0][0] << " has been detected as transient spine." << endl;
                 Query = "UPDATE spines SET is_transient = 1 WHERE spine_id = \"";
                 Query += r_gained[i][0];
                 Query += "\" AND dendrite_id = \"";
@@ -2476,7 +2483,7 @@ void CalcTransients(Database &db, int transients_period)
                 Query += daysgained[i][2];
                 Query += ";";
                 db.Query(Query);
-                cout << "Info> Spine \"" << dayslost[0][2] << "\" on dendrite \"" << dayslost[0][3] << "\" gained on day "<< daysgained[i][2] <<" and lost on day " << dayslost[0][0] << " has been detected as transient spine." << endl;
+                _stdoutput << "Info> Spine \"" << dayslost[0][2] << "\" on dendrite \"" << dayslost[0][3] << "\" gained on day "<< daysgained[i][2] <<" and lost on day " << dayslost[0][0] << " has been detected as transient spine." << endl;
 
                 //update the spines table
                 Query = "UPDATE spines SET is_transient = 1 WHERE spine_id = \"";
@@ -2542,7 +2549,7 @@ void CalcTor(Database &db)
     dbResults r_gainedlost;
     double tor;
 
-    //cout << "Info> Calculating TOR(t, t-1) = (gained spines+lost spines/2*all spines) / ((t) - (t-1))" << endl;
+    //_stdoutput << "Info> Calculating TOR(t, t-1) = (gained spines+lost spines/2*all spines) / ((t) - (t-1))" << endl;
 
     Query = "SELECT DISTINCT dendrite_id FROM dendrites;";
     r_ids = db.Query(Query);
@@ -2556,7 +2563,7 @@ void CalcTor(Database &db)
         tor = 0;
         //if (r_
         //for (int j = 1;
-        //cout << r_gainedlost.size() << endl;
+        //_stdoutput << r_gainedlost.size() << endl;
         if (r_gainedlost.size() > 1)
         {
             for (vInt j = 1; j < r_gainedlost.size(); j++)
@@ -2569,15 +2576,15 @@ void CalcTor(Database &db)
              Query += "\" AND day = ";
              Query += r_gainedlost[j][1];
              Query += ";";
-             //cout << Query << endl;
+             //_stdoutput << Query << endl;
              db.Query(Query);
-             //cout << "\rInfo> Performed queries: " << db.QueryCount;
-             cout << "\rInfo> Calculating dTOR(" << r_gainedlost[j][1] << "," << r_gainedlost[j-1][1] << ") = ("<< r_gainedlost[j][0] <<") / (2*" << (atof(r_gainedlost[j][2].c_str()) + atof(r_gainedlost[j][3].c_str())) << ") / ("<< r_gainedlost[j][1] << "-" << r_gainedlost[j-1][1] << ")" ;
+             //_stdoutput << "\rInfo> Performed queries: " << db.QueryCount;
+             _stdoutput << "\rInfo> Calculating dTOR(" << r_gainedlost[j][1] << "," << r_gainedlost[j-1][1] << ") = ("<< r_gainedlost[j][0] <<") / (2*" << (atof(r_gainedlost[j][2].c_str()) + atof(r_gainedlost[j][3].c_str())) << ") / ("<< r_gainedlost[j][1] << "-" << r_gainedlost[j-1][1] << ")" ;
             }
         }
-        else cout << "Warning> Not enough data to calculate TOR for dendrite with id \""<<r_ids[i][0]<<"\". Skipped." << endl;
+        else _stdoutput << "Warning> Not enough data to calculate TOR for dendrite with id \""<<r_ids[i][0]<<"\". Skipped." << endl;
     }
-    cout << endl;
+    _stdoutput << endl;
 
     dbResults r_tmp = db.Query("SELECT MIN(day), MAX(day) FROM dendrites;");
     Query = "UPDATE dendrites SET tor = NULL WHERE day = ";
@@ -2593,7 +2600,7 @@ void CalcNewGainedSurvival(Database &db, int imaging_tp)
 {
     string Query;
 
-    cout << "Info> Calculating the survival of spines which were gained at imaging timepoint " << _itoa(imaging_tp + 1) << "." << endl;
+    _stdoutput << "Info> Calculating the survival of spines which were gained at imaging timepoint " << _itoa(imaging_tp + 1) << "." << endl;
 
     //format table
     db.Query("UPDATE dendrites SET newgained_survival = NULL;");
@@ -2619,7 +2626,7 @@ void CalcNewGainedSurvival(Database &db, int imaging_tp)
         r_days = db.Query(Query);
         if (imaging_tp + 1 > atoi(r_days[0][0].c_str()))
         {
-            cout << "Error> Cannot calculate with imaging entrypoint " << _itoa(imaging_tp + 1) << " when only " << r_days[0][0] << " timepoints available for dendrite \"" << r_ids[i][0] << "\". Skipped." << endl;
+            _stdoutput << "Error> Cannot calculate with imaging entrypoint " << _itoa(imaging_tp + 1) << " when only " << r_days[0][0] << " timepoints available for dendrite \"" << r_ids[i][0] << "\". Skipped." << endl;
             continue;
         }
 
@@ -2632,19 +2639,19 @@ void CalcNewGainedSurvival(Database &db, int imaging_tp)
         Query += r_ids[i][0];
         Query += "\");";
         r_days = db.Query(Query);
-        //cout << Query;
+        //_stdoutput << Query;
         //db.ShowLastResults();
 
         //hopefully, there will be some results and gained spines
         if (r_days.size() == 0 || r_days[0][1] == "0")
         {
-            cout << endl << "Warning> Cannot calculate the survival of new gained spines at imaging timepoint " << _itoa(imaging_tp + 1) << " for dendrite_id \"" << r_ids[i][0] << "\" having " << r_days[0][1] << " gained spines. Skipped." << endl;
+            _stdoutput << endl << "Warning> Cannot calculate the survival of new gained spines at imaging timepoint " << _itoa(imaging_tp + 1) << " for dendrite_id \"" << r_ids[i][0] << "\" having " << r_days[0][1] << " gained spines. Skipped." << endl;
             continue;
         }
 
 /*        if ((imaging_tp + 1) > atoi(r_days[0][2].c_str()))
         {
-            cout << endl << "Error> Imaging timepoint " << itoa(imaging_tp + 1) << " does not exist. Try less. Stopped." << endl;
+            _stdoutput << endl << "Error> Imaging timepoint " << itoa(imaging_tp + 1) << " does not exist. Try less. Stopped." << endl;
             return;
         }*/
 
@@ -2698,11 +2705,11 @@ void CalcNewGainedSurvival(Database &db, int imaging_tp)
             Query += ";";
             db.Query(Query);
 
-            cout << "\rInfo> NGS for dendrite \"" << r_ids[i][0] << "\" at day " << r_days[j][0] << " is " << survival << ".    ";
+            _stdoutput << "\rInfo> NGS for dendrite \"" << r_ids[i][0] << "\" at day " << r_days[j][0] << " is " << survival << ".    ";
        }
     }
 
-    cout << endl;
+    _stdoutput << endl;
 
     UpdateDB(db);
 
@@ -2711,10 +2718,10 @@ void CalcNewGainedSurvival(Database &db, int imaging_tp)
 
 void ShowTableDendrites(Database &db)
 {
-    //cout << endl << "Table \"dendrites\":" << endl;
-    //cout << "ID\tDay\tLength\tStable\tGained\tLost\tDensity\t%Stable\t%Gained\t%Lost\t%Surv.\tGnd&Lst\tTranst.\tFilop.\t%Filop.\tdTOR" << endl;
+    //_stdoutput << endl << "Table \"dendrites\":" << endl;
+    //_stdoutput << "ID\tDay\tLength\tStable\tGained\tLost\tDensity\t%Stable\t%Gained\t%Lost\t%Surv.\tGnd&Lst\tTranst.\tFilop.\t%Filop.\tdTOR" << endl;
     string header = db.GetTableHeader("dendrites", '\t');
-    cout << header << endl;
+    _stdoutput << header << endl;
     //db.Query("SELECT dendrite_id, day, length, stable_spines, gained_spines, lost_spines, spine_density, frac_stable, frac_gained, frac_lost, frac_survival, gainedlost, transient_spines, filopodia, frac_filopodia, tor from dendrites ORDER BY dendrite_id AND day;");
     db.Query("SELECT * FROM dendrites ORDER BY dendrite_id AND day;");
     db.ShowLastResults();
@@ -2722,10 +2729,10 @@ void ShowTableDendrites(Database &db)
 
 void ShowTableSpines(Database &db)
 {
-    //cout << endl << "Table \"spines\":" << endl;
-    //cout << "ID\tType\tDndr.ID\tDay" << endl;
+    //_stdoutput << endl << "Table \"spines\":" << endl;
+    //_stdoutput << "ID\tType\tDndr.ID\tDay" << endl;
     string header = db.GetTableHeader("spines", '\t');
-    cout << header << endl;
+    _stdoutput << header << endl;
     db.Query("SELECT * from spines ORDER BY dendrite_id AND spine_id AND day;");
     db.ShowLastResults();
 }
@@ -2739,8 +2746,8 @@ void ScanOnly()
     filenames = O.ScanFiles();
     if (filenames.size() == 0)
     {
-        cout << endl << O.LastError.str();
-        cout << "Info> SpineMiner stopped." << endl;
+        _stdoutput << endl << O.LastError.str();
+        _stdoutput << "Info> SpineMiner stopped." << endl;
         return;
     }
     return;
@@ -2753,15 +2760,15 @@ void ScanOnly()
 //it is implemented also to calc the distances for other spine_types but we don't use this at te moment
 void CalcDistances(Database &db, bool stable, bool gained, bool lost)
 {
-    cout << "Info> Calculating minimum spine distances for [";
-    if (stable == true) cout << " stable ";
-    if (gained == true) cout << " gained ";
-    if (lost == true) cout << " lost ";
-    cout << "] spines..." << endl;
+    _stdoutput << "Info> Calculating minimum spine distances for [";
+    if (stable == true) _stdoutput << " stable ";
+    if (gained == true) _stdoutput << " gained ";
+    if (lost == true) _stdoutput << " lost ";
+    _stdoutput << "] spines..." << endl;
 
     if (stable == false && gained == false && lost == false)
     {
-        cout << "Error> Cannot calculate distance Matrix for nothing!?";
+        _stdoutput << "Error> Cannot calculate distance Matrix for nothing!?";
         return;
     }
 
@@ -2831,11 +2838,11 @@ void CalcDistances(Database &db, bool stable, bool gained, bool lost)
                 Query += _ftoa(v_mins[n]);
                 Query += ");";
                 db.Query(Query);
-                cout << "\rInfo> Added minimum distance of " << v_mins[n] << " to dendrite \"" << r_ids[i][0] << "\".";
+                _stdoutput << "\rInfo> Added minimum distance of " << v_mins[n] << " to dendrite \"" << r_ids[i][0] << "\".";
             }
         //}
     }
-    cout << endl;
+    _stdoutput << endl;
 }
 
 
@@ -2864,7 +2871,7 @@ void CalcCluster(Database &db, DBScan &dbs, string dendrite_id, double eps, unsi
     r_exists = db.Query(Query);
     if (r_exists.size() > 0)
     {
-        cout << "Info> Cluster values for dendrite \"" << dendrite_id << "\" will be recalculated." << endl;
+        _stdoutput << "Info> Cluster values for dendrite \"" << dendrite_id << "\" will be recalculated." << endl;
         Query = "DELETE FROM clusters WHERE dendrite_id = \"";
         Query += dendrite_id;
         Query += "\";";
@@ -2882,12 +2889,12 @@ void CalcCluster(Database &db, DBScan &dbs, string dendrite_id, double eps, unsi
 
     if (r_gained.size() == 0)
     {
-        cout << "Error> Cannot run dbscan on dendrites (\"" << dendrite_id << "\") which do not exist." << endl;
+        _stdoutput << "Error> Cannot run dbscan on dendrites (\"" << dendrite_id << "\") which do not exist." << endl;
         return;
     }
     else
     {
-        cout << "\rInfo> A dbscan on dendrite \"" << dendrite_id <<"\" with epsilon=" << eps << " and minPts=" << minPts << " revealed ";
+        _stdoutput << "\rInfo> A dbscan on dendrite \"" << dendrite_id <<"\" with epsilon=" << eps << " and minPts=" << minPts << " revealed ";
     }
 
     //now we have all spines.
@@ -2899,9 +2906,9 @@ void CalcCluster(Database &db, DBScan &dbs, string dendrite_id, double eps, unsi
 
     //run the dbscan
     dbs.RunDBScan(eps, minPts);
-    cout << dbs.nCluster << " clusters.";
-    if (dbs.nCluster == 0) cout << " Maybe you should increase eps and/or decrease minPts?";
-    cout << endl;
+    _stdoutput << dbs.nCluster << " clusters.";
+    if (dbs.nCluster == 0) _stdoutput << " Maybe you should increase eps and/or decrease minPts?";
+    _stdoutput << endl;
 
     //insert this info into the database
     Query = "INSERT INTO clusters VALUES (\"";
@@ -2966,7 +2973,7 @@ void CalcCluster(Database &db, DBScan &dbs, string dendrite_id, double eps, unsi
         {
             if (dbs.vecNodes[i]->m_nCluster >= MAX_COLORS)
             {
-                cout << "Warning> Cannot assign more than " << MAX_COLORS << " to the clusters. Skipped" << endl;
+                _stdoutput << "Warning> Cannot assign more than " << MAX_COLORS << " to the clusters. Skipped" << endl;
                 return;
             }
 
@@ -2998,7 +3005,7 @@ void CalcClusterFromPrompt(Database &db, DBScan &dbs, string dendrite_id, double
         r_ids = db.Query("SELECT DISTINCT dendrite_id FROM dendrites ORDER BY dendrite_id");
         if (r_ids.size() == 0)
         {
-            cout << "Error> No dendrites found for a DBScan." << endl;
+            _stdoutput << "Error> No dendrites found for a DBScan." << endl;
             return;
         }
 
@@ -3022,14 +3029,14 @@ void PreCalcClusters(Database &db, DBScan &dbs, bool table_exists)
     //does table clusters does not exist create clusters table
     if (!table_exists) db.Query("CREATE TABLE clusters (dendrite_id TEXT, day INTEGER, epsilon DOUBLE, minPts INTEGER, clusters INTEGER);");
 
-    cout << "Info> This is a quick DBScan of all dendrites. NOTE: the used values for epsilon and minPts should be adjusted individually!" << endl;
-    cout << "Info> To do this run with -dbscan option." << endl;
+    _stdoutput << "Info> This is a quick DBScan of all dendrites. NOTE: the used values for epsilon and minPts should be adjusted individually!" << endl;
+    _stdoutput << "Info> To do this run with -dbscan option." << endl;
 
     //get all the ids
     r_ids = db.Query("SELECT DISTINCT dendrite_id FROM dendrites ORDER BY dendrite_id");
     if (r_ids.size() == 0)
     {
-        cout << "Error> No dendrites found for a quick DBScan." << endl;
+        _stdoutput << "Error> No dendrites found for a quick DBScan." << endl;
         return;
     }
 
@@ -3068,14 +3075,14 @@ void NewAnalysis(string dbfile, bool ignoremorphologies, bool nofilopodia)
 
     if (filenames.size() == 0)
     {
-        cout << endl << O.LastError.str();
-        cout << "Info> Spinecounter stopped." << endl;
+        _stdoutput << endl << O.LastError.str();
+        _stdoutput << "Info> Spinecounter stopped." << endl;
         return;
     }
 
-    cout << "Info> Creating now virtual neurons in " << dbfile << endl;
-    if (ignoremorphologies == true) cout << "Info> Spine morphologies will be ignored." << endl;
-    if (nofilopodia == true) cout << "Info> Filopodia will be counted as thin spines." << endl;
+    _stdoutput << "Info> Creating now virtual neurons in " << dbfile << endl;
+    if (ignoremorphologies == true) _stdoutput << "Info> Spine morphologies will be ignored." << endl;
+    if (nofilopodia == true) _stdoutput << "Info> Filopodia will be counted as thin spines." << endl;
     //pass the commandline options for morphologies / filopodia to the class instance
     O.IgnoreSpineMorphologies = ignoremorphologies;
     O.NoFilopodia = nofilopodia;
@@ -3087,7 +3094,7 @@ void NewAnalysis(string dbfile, bool ignoremorphologies, bool nofilopodia)
         {
             if(!db.Open(dbfile))
             {
-                cout << "Error> Cannot open database file. Aborted." << endl;
+                _stdoutput << "Error> Cannot open database file. Aborted." << endl;
                 return;
             }
 
@@ -3098,34 +3105,34 @@ void NewAnalysis(string dbfile, bool ignoremorphologies, bool nofilopodia)
 
         m += O.ReadAllData(filenames[n], db);
 
-        cout << "\rInfo> Added " << n + 1 << " timepoints and " << m << " spines...";
+        _stdoutput << "\rInfo> Added " << n + 1 << " timepoints and " << m << " spines...";
 
     }
 
-    cout << endl;
+    _stdoutput << endl;
 
     //now start wih calculations
     db.Query("SELECT COUNT(DISTINCT \"dendrite_id\") FROM dendrites;");
     if (db.Results.size() > 0)
     {
-        cout << "Info> Database created." << endl;
+        _stdoutput << "Info> Database created." << endl;
     }
     else
     {
-        cout << "Error> Database empty." << endl;
+        _stdoutput << "Error> Database empty." << endl;
         Quit();
     }
-    /*cout << "Info> Added "<<db.Results[0][0]<<" dendrites and ";
+    /*_stdoutput << "Info> Added "<<db.Results[0][0]<<" dendrites and ";
     db.Query("SELECT COUNT(\"day\") FROM dendrites;");
-    cout << db.Results[0][0] << " imaging timepoints with ";
+    _stdoutput << db.Results[0][0] << " imaging timepoints with ";
     db.Query("SELECT COUNT(\"spine_id\") FROM spines;");
-    cout << db.Results[0][0] << " spines in total." << endl;*/
+    _stdoutput << db.Results[0][0] << " spines in total." << endl;*/
 
     // Updating the LOST table.
     // Problem: between day 1 and two a stable spine becomes lost. In parallel, a lost spine becomes regained.
     // By calculating the differenence between spines numbers marked in red at day 0 and 1 it would result in zero!
     // Solution: calculate lost spines individually: count lost only when it was gained/or stable before
-    cout << "Info> Updating table for lost spines." << endl;
+    _stdoutput << "Info> Updating table for lost spines." << endl;
     dbResults r_ids, r_days, r_losts, r_statusbefore;
     int counter = 0;
     db.Query("UPDATE dendrites SET lost_spines = 0"); //format the column
@@ -3155,7 +3162,7 @@ void NewAnalysis(string dbfile, bool ignoremorphologies, bool nofilopodia)
                 r_losts = db.Query(Query);
 
                 //for each lost spine
-                //cout << r_days[q][0] << "/" << r_losts.size() << endl;
+                //_stdoutput << r_days[q][0] << "/" << r_losts.size() << endl;
                 for (vInt r = 0; r < r_losts.size(); r++)
                 {
                     //was the lost spine stable or gained before?
@@ -3167,9 +3174,9 @@ void NewAnalysis(string dbfile, bool ignoremorphologies, bool nofilopodia)
                     Query += r_losts[r][0];
                     Query += "\" ORDER BY day DESC LIMIT 1;";
                     r_statusbefore = db.Query(Query);
-                    //cout << Query << endl;
+                    //_stdoutput << Query << endl;
                     //db.ShowLastResults();
-                    //cout << "spine_id = " << r_losts[r][0] << "curr_day = " << r_days[q][0] << ", day before = " << r_statusbefore[0][1] << endl;
+                    //_stdoutput << "spine_id = " << r_losts[r][0] << "curr_day = " << r_days[q][0] << ", day before = " << r_statusbefore[0][1] << endl;
                     if (r_statusbefore[0][0] != "lost") counter++;
                     //db.QueryCount ++;
                 }
@@ -3183,14 +3190,14 @@ void NewAnalysis(string dbfile, bool ignoremorphologies, bool nofilopodia)
                 Query += ";";
                 db.Query(Query);
 
-                cout << "\rInfo> Added " << counter << " lost spines to dendrite \"" << r_ids[p][0] << "\" at day " << r_days[q][0] << ".";
+                _stdoutput << "\rInfo> Added " << counter << " lost spines to dendrite \"" << r_ids[p][0] << "\" at day " << r_days[q][0] << ".";
 
                 counter = 0;
             }
         }
         else
         {
-            cout << "Warning> Found only one imaging timepoint for dendrite \"" << r_ids[p][0] << "\". Cannot calculate lost fraction. Skipped." << endl;
+            _stdoutput << "Warning> Found only one imaging timepoint for dendrite \"" << r_ids[p][0] << "\". Cannot calculate lost fraction. Skipped." << endl;
         }
     }
     //update the gainedlost
@@ -3198,14 +3205,14 @@ void NewAnalysis(string dbfile, bool ignoremorphologies, bool nofilopodia)
     /*db.Query("UPDATE dendrites SET gainedlost = gained_spines + lost_spines;");
     db.Query("UPDATE dendrites SET frac_lost_spines = 100 * (CAST(lost_spines AS DOUBLE)) / (gained_spines + stable_spines);");
     db.Query("UPDATE dendrites SET frac_gainedlost = 100 * (CAST(gainedlost AS DOUBLE)) / (gained_spines + stable_spines);");*/
-    cout << endl;
+    _stdoutput << endl;
 
     //redundancy or any other Errors occured?
     if (db.GetAbortFlag())
     {
         db.Close();
         db.Remove();
-        cout << endl << "Error> There have been errors detected in your OVL-files. Please fix errors and retry. Analysis aborted.";
+        _stdoutput << endl << "Error> There have been errors detected in your OVL-files. Please fix errors and retry. Analysis aborted.";
         Quit();
     }
 
@@ -3229,15 +3236,15 @@ void NewAnalysis(string dbfile, bool ignoremorphologies, bool nofilopodia)
 
     if (!CheckFates(db))
     {
-        cout << "Error> Wrong spine fate assignments. Please recheck your overlays to avoid statistical errors." << endl;
+        _stdoutput << "Error> Wrong spine fate assignments. Please recheck your overlays to avoid statistical errors." << endl;
         db.SetAbortFlag();
     }
-    else cout << "Info> Database clean. No errors in spine fates found." << endl;
+    else _stdoutput << "Info> Database clean. No errors in spine fates found." << endl;
 
 
     if (O.LastError.str() != "")
     {
-        cout << endl << "Error> Errors occured:" << endl << O.LastError.str();
+        _stdoutput << endl << "Error> Errors occured:" << endl << O.LastError.str();
     }
 
     UpdateDB(db);
@@ -3249,11 +3256,11 @@ void NewAnalysis(string dbfile, bool ignoremorphologies, bool nofilopodia)
     {
         db.Close();
         db.Remove();
-        cout << endl << "Error> There have been errors detected in your OVL-files. Please fix errors and retry. Analysis aborted.";
+        _stdoutput << endl << "Error> There have been errors detected in your OVL-files. Please fix errors and retry. Analysis aborted.";
         Quit();
     }
 
-    cout << endl;
+    _stdoutput << endl;
 
     return;
 }

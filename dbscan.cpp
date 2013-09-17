@@ -1,5 +1,7 @@
 #include "dbscan.h"
 
+using namespace std;
+
 DBScan::DBScan()
 {
     kdTree = kd_create(2);

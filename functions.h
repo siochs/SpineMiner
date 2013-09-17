@@ -31,8 +31,7 @@
 #define BACKGROUND_STABLE_SPINES_OPACITY    0.03
 #define BACKGROUND_STABLE_SPINES_RADIUS     20
 
-using namespace std;
-using namespace cimg_library;
+//using namespace cimg_library;
 
 //vars
 
@@ -40,23 +39,23 @@ using namespace cimg_library;
 
 //Forwards
 void ShowUsage(void);
-void FindReplace(string find, string replace);
+void FindReplace(std::string find, std::string replace);
 void Quit(void);
-void SQLPipe(string filename, Database &db);
+void SQLPipe(std::string filename, Database &db);
 void UpdateDB(Database &db);
 void CalcShapeshiftingFrequency(Database &db);
 //void CalcTransientGainedLostMorphs(Database &db);
 //void CalcGainedLostMorphs(Database &db);
-string SpineType(string dendrite_id, string spine_id, string timepoint, Database &db);
-void WriteSum(Database &db, fstream &f, string identifier);
-void WriteRegainedSpineData(Database &db, fstream &f);
-void WriteClusterData(Database &db, fstream &f);
-void Convert(Database &db, string filename);
-string TraceFate(string spine_id, string dendrite_id, Database &db, bool showresults);
-void RetrieveFilesFromDendrite(Database &db, string dendrite_id);
+std::string SpineType(std::string dendrite_id, std::string spine_id, std::string timepoint, Database &db);
+void WriteSum(Database &db, std::fstream &f, std::string identifier);
+void WriteRegainedSpineData(Database &db, std::fstream &f);
+void WriteClusterData(Database &db, std::fstream &f);
+void Convert(Database &db, std::string filename);
+std::string TraceFate(std::string spine_id, std::string dendrite_id, Database &db, bool showresults);
+void RetrieveFilesFromDendrite(Database &db, std::string dendrite_id);
 bool CheckFates(Database &db);
-void PrintTor(string dendrite_id, Database &db);
-void PrintSurvival(string dendrite_id, Database &db);
+void PrintTor(std::string dendrite_id, Database &db);
+void PrintSurvival(std::string dendrite_id, Database &db);
 void CalcSurvival(Database &db, int imaging_tp);
 void CalcTransients(Database &db, int transients_period);
 void CalcTor(Database &db);
@@ -64,10 +63,10 @@ void CalcNewGainedSurvival(Database &db, int imaging_tp);
 void ShowTableDendrites(Database &db);
 void ShowTableSpines(Database &db);
 void ScanOnly();
-void NewAnalysis(string dbfile, bool ignoremorphologies, bool nofilopodia);
-void CalcCluster(Database &db, DBScan &dbs, string dendrite_id, double eps, unsigned int minPts, bool make_jpeg, bool wait_click);
+void NewAnalysis(std::string dbfile, bool ignoremorphologies, bool nofilopodia);
+void CalcCluster(Database &db, DBScan &dbs, std::string dendrite_id, double eps, unsigned int minPts, bool make_jpeg, bool wait_click);
 void PreCalcClusters(Database &db, DBScan &dbs, bool table_exists);
-void CalcClusterFromPrompt(Database &db, DBScan &dbs, string dendrite_id, double eps, unsigned int minPts, bool make_jpeg);
+void CalcClusterFromPrompt(Database &db, DBScan &dbs, std::string dendrite_id, double eps, unsigned int minPts, bool make_jpeg);
 void CalcMorphs(Database &db);
 
 #endif // __FUNCTIONS_H__

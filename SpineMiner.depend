@@ -1,18 +1,18 @@
 # depslib dependency file v1.0
-1366719686 source:d:\sourcecodes\github\spineminer\database.cpp
+1379061072 source:d:\sourcecodes\github\spineminer\database.cpp
 	"database.h"
 
-1366719673 d:\sourcecodes\github\spineminer\database.h
+1379058234 d:\sourcecodes\github\spineminer\database.h
 	<vector>
 	<stdlib.h>
 	<stdio.h>
 	"sqlite/sqlite3.h"
 	"helpers.h"
 
-1337702580 d:\sourcecodes\github\spineminer\sqlite\sqlite3.h
+1378073472 d:\sourcecodes\github\spineminer\sqlite\sqlite3.h
 	<stdarg.h>
 
-1365864184 d:\sourcecodes\github\spineminer\helpers.h
+1379058234 d:\sourcecodes\github\spineminer\helpers.h
 	<string>
 	<iostream>
 	<sstream>
@@ -23,20 +23,20 @@
 	<dirent.h>
 	<sys/types.h>
 
-1364489600 source:d:\sourcecodes\github\spineminer\dbscan.cpp
+1379058573 source:d:\sourcecodes\github\spineminer\dbscan.cpp
 	"dbscan.h"
 
-1364489522 d:\sourcecodes\github\spineminer\dbscan.h
+1379058361 d:\sourcecodes\github\spineminer\dbscan.h
 	"kdtree/kdtree.h"
 	<utility>
 	<vector>
 
-1322184070 d:\sourcecodes\github\spineminer\kdtree\kdtree.h
+1378073472 d:\sourcecodes\github\spineminer\kdtree\kdtree.h
 
-1376047263 source:d:\sourcecodes\github\spineminer\functions.cpp
+1379061118 source:d:\sourcecodes\github\spineminer\functions.cpp
 	"functions.h"
 
-1376047490 d:\sourcecodes\github\spineminer\functions.h
+1379058718 d:\sourcecodes\github\spineminer\functions.h
 	<dir.h>
 	<algorithm>
 	<fstream>
@@ -46,7 +46,7 @@
 	"dbscan.h"
 	"CImg/cimg.h"
 
-1366722179 d:\sourcecodes\github\spineminer\ovlreader.h
+1379058630 d:\sourcecodes\github\spineminer\ovlreader.h
 	<vector>
 	<fstream>
 	<dir.h>
@@ -54,7 +54,7 @@
 	"database.h"
 	"helpers.h"
 
-1359490374 d:\sourcecodes\github\spineminer\cimg\cimg.h
+1378073472 d:\sourcecodes\github\spineminer\cimg\cimg.h
 	<cstdio>
 	<cstdlib>
 	<cstdarg>
@@ -103,10 +103,10 @@
 	"ImfArray.h"
 	"CImg.h"
 
-1365864236 source:d:\sourcecodes\github\spineminer\helpers.cpp
+1379061143 source:d:\sourcecodes\github\spineminer\helpers.cpp
 	"helpers.h"
 
-1376056362 source:d:\sourcecodes\github\spineminer\main.cpp
+1379061179 source:d:\sourcecodes\github\spineminer\main.cpp
 	<stdio.h>
 	<string>
 	<iostream>
@@ -116,11 +116,67 @@
 	"database.h"
 	"functions.h"
 
-1376046420 d:\sourcecodes\github\spineminer\ioswitch.h
+1379061474 d:\sourcecodes\github\spineminer\ioswitch.h
 	<streambuf>
 	<ios>
 	<fstream>
 
-1366803842 source:d:\sourcecodes\github\spineminer\ovlreader.cpp
+1379061194 source:d:\sourcecodes\github\spineminer\ovlreader.cpp
 	"ovlreader.h"
+
+1378073472 source:d:\sourcecodes\github\spineminer\kdtree\kdtree.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	"kdtree.h"
+	<malloc.h>
+	<pthread.h>
+
+1378073472 source:d:\sourcecodes\github\spineminer\sqlite\sqlite3.c
+	"config.h"
+	<stdint.h>
+	<inttypes.h>
+	<tcl.h>
+	<stdarg.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	<stddef.h>
+	<windows.h>
+	<os2safe.h>
+	<os2.h>
+	<uconv.h>
+	<ctype.h>
+	<time.h>
+	<sys/sysctl.h>
+	<malloc/malloc.h>
+	<libkern/OSAtomic.h>
+	<malloc.h>
+	<pthread.h>
+	<math.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<fcntl.h>
+	<unistd.h>
+	<sys/time.h>
+	<errno.h>
+	<sys/mman.h>
+	<sys/ioctl.h>
+	<semaphore.h>
+	<limits.h>
+	<sys/file.h>
+	<sys/param.h>
+	<sys/mount.h>
+	<utime.h>
+	<dlfcn.h>
+	<sys/cygwin.h>
+	"sqlite3rtree.h"
+	<unicode/utypes.h>
+	<unicode/uregex.h>
+	<unicode/ustring.h>
+	<unicode/ucol.h>
+	<unicode/ubrk.h>
+	<unicode/utf16.h>
 

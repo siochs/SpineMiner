@@ -7,17 +7,15 @@
 #include "sqlite/sqlite3.h"
 #include "helpers.h"
 
-using namespace std;
-
-typedef vector<vector<string> > dbResults;
+typedef std::vector<std::vector<std::string> > dbResults;
 
 class Database
 {
 public:
     Database();
     ~Database();
-    bool Open(string filename);
-    dbResults Query(string query);
+    bool Open(std::string filename);
+    dbResults Query(std::string query);
     void Close();
     void ShowLastResults();
     bool IsOpen();
@@ -26,14 +24,14 @@ public:
     bool GetAbortFlag();
     void SetAbortFlag();
     dbResults Results;
-    string GetTableHeader(string tbl_name, char separator);
+    std::string GetTableHeader(std::string tbl_name, char separator);
     //int QueryCount;
     bool protect_db;
 
 private:
     sqlite3 *database;
     bool opened;
-    string db_filename;
+    std::string db_filename;
     bool abort;
 };
 

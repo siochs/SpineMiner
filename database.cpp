@@ -1,5 +1,9 @@
 #include "database.h"
 
+using namespace std;
+
+extern std::ofstream _stdoutput;
+
 //constructor
 Database::Database()
 {
@@ -14,15 +18,15 @@ Database::~Database()
 {
 }
 
-//Shows the result of the last query on cout.
+//Shows the result of the last query on _stdoutput.
 void Database::ShowLastResults()
 {
     for (vInt i = 0; i < Results.size(); i++)
     {
         for (vInt j = 0; j < Results[i].size(); j++)
-            cout << Results[i][j] << "\t";
+            _stdoutput << Results[i][j] << "\t";
 
-        cout << endl;
+        _stdoutput << endl;
     }
 }
 
@@ -87,14 +91,14 @@ dbResults Database::Query(string query)
     //error handling
     string error = sqlite3_errmsg(database);
     if(error != "not an error"){
-        cout << "Error> Unable to perform SQL Query: \"" << query <<"\". " << endl << "SQL Error> "<< error << endl;
+        _stdoutput << "Error> Unable to perform SQL Query: \"" << query <<"\". " << endl << "SQL Error> "<< error << endl;
         if (protect_db == false)
         {
             //if an error occurs, delete the database! This will only happen in non-protected mode, e.g. when reading OVL files.
             //this is a ( - I admit, it's hard) protection to avoid calculation crashes...
             Close();
             Remove();
-            cout << "Error> Database "<<db_filename<<" deleted." << endl;
+            _stdoutput << "Error> Database "<<db_filename<<" deleted." << endl;
             //Quit();
             exit(-1);
         }
@@ -145,7 +149,7 @@ void Database::SQL()
 {
     string Q;
     protect_db = true;
-    cout << "Info> Database ready to accept SQL Query. Enter \"!q\" to exit Query mode." << endl << "SQL>";
+    _stdoutput << "Info> Database ready to accept SQL Query. Enter \"!q\" to exit Query mode." << endl << "SQL>";
     while(1)
     {
         getline(cin , Q);
@@ -153,7 +157,7 @@ void Database::SQL()
         {
             Query(Q);
             ShowLastResults();
-            cout << endl << "SQL>";
+            _stdoutput << endl << "SQL>";
         }
         else
         break;

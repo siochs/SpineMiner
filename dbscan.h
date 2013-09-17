@@ -5,8 +5,6 @@
 #include <utility>
 #include <vector>
 
-using namespace std;
-
 class Node : public std::pair<double, double>
 {
 public:
@@ -35,12 +33,12 @@ public:
     int RunDBScan(double dblEpsilon, int nMinPts);
     void Clear();
 
-    vector<Node*> vecNodes;
+    std::vector<Node*> vecNodes;
     int nCluster;
 
 private:
-    bool GetNodesInRadius(Node* pt, double dblRadius, int nMinPts, vector<Node*>& rgpNodesFound);
-    void ExpandCluster(vector<Node*>& rgp, int nCluster, double dblEpsilon, int nMinPts);
+    bool GetNodesInRadius(Node* pt, double dblRadius, int nMinPts, std::vector<Node*>& rgpNodesFound);
+    void ExpandCluster(std::vector<Node*>& rgp, int nCluster, double dblEpsilon, int nMinPts);
     kdtree* kdTree;
     Node* pt;
 

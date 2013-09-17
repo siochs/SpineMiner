@@ -15,27 +15,26 @@
 #define XPOS 108
 #define YPOS  116
 
-using namespace std;
 
 class OVLReader
 {
     public:
         OVLReader(){};
         ~OVLReader(){delete[] buffer;};
-        vector <string> ScanFiles();
-        int ReadAllData(string ovl_filename, Database &db);
+        std::vector <std::string> ScanFiles();
+        int ReadAllData(std::string ovl_filename, Database &db);
 
-        stringstream LastError;
+        std::stringstream LastError;
         bool IgnoreSpineMorphologies;
         bool NoFilopodia;
 
     private:
-        bool OpenOVL(string filename);
+        bool OpenOVL(std::string filename);
         bool GotoNextFontTag();
-        string ReadOVLString();
+        std::string ReadOVLString();
         bool IsAlnum(char c);
-        string ReadOVLCategory();
-        bool IsConsistent(string filename);
+        std::string ReadOVLCategory();
+        bool IsConsistent(std::string filename);
         void ReadOVLPositions( double &x, double &y );
 
         char* buffer;                   //binary content of OVL file which is currently in use

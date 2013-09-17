@@ -5,7 +5,7 @@
 //basically the standard cout stream buffer will be redirected to two new stream buffers,
 //of which one is used for console and the other one for filestream
 
-#define BEGIN_IOSWITCH Spreadbuf spready( cout.rdbuf(), file.rdbuf() );{IosSwitch coutswitch( cout, &spready );
+#define BEGIN_IOSWITCH Spreadbuf spready( cout.rdbuf(), file.rdbuf() );{IosSwitch coutswitch( _stdoutput, &spready );
 
 #define END_IOSWITCH }
 
@@ -13,9 +13,8 @@
 #include <ios>
 #include <fstream>
 
-using namespace std;
 
-ofstream file( "log.txt" ); //output file from SpineMiner
+std::ofstream file( "log.txt" ); //output file from SpineMiner
 
 class Spreadbuf : public std::basic_streambuf< char >
 {

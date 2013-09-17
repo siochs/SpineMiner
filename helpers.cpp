@@ -1,6 +1,8 @@
 #include "helpers.h"
 
 using namespace std;
+extern std::ofstream _stdoutput;
+
 long _atoi(string s)
 {
     stringstream ss;
@@ -110,9 +112,9 @@ void _PrintMatrix(Matrix &m)
      {
          for (vInt j = 0; j < m[i].size(); j++)
          {
-             cout << m[i][j] << "\t";
+             _stdoutput << m[i][j] << "\t";
          }
-         cout << endl;
+         _stdoutput << endl;
      }
 
     return;
@@ -167,7 +169,7 @@ vector<double> _ExtractMinimaFromMatrix(Matrix &m)
     {
         v_mins.push_back(v1);
         _RemoveEntityFromSymmetricMatrix(m,x);
-        /*cout << endl << v1 << endl;
+        /*_stdoutput << endl << v1 << endl;
         PrintMatrix(m);*/
     }
 

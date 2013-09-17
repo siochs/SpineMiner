@@ -1,5 +1,8 @@
 #include "ovlreader.h"
 
+using namespace std;
+extern std::ofstream _stdoutput;
+
 //searches the next match of "A r i a l" in the buffer. Search starts at curr_pos.
 //curr_pos will be set to new position on match
 bool OVLReader::GotoNextFontTag()
@@ -257,12 +260,12 @@ vector<string> OVLReader::ScanFiles()
         //check if file is consistent
             if (IsConsistent(filenames[i]) == false)
             {
-                cout << "Warning> File \"" << filenames[i] << "\" is inconsistent. File will be skipped." << endl;
+                _stdoutput << "Warning> File \"" << filenames[i] << "\" is inconsistent. File will be skipped." << endl;
                 continue;
             }
             else
             {
-                cout << "Info> File \"" << filenames[i] << "\" is consistent. File can be used for analysis." << endl;
+                _stdoutput << "Info> File \"" << filenames[i] << "\" is consistent. File can be used for analysis." << endl;
                 r.push_back(filenames[i]);
             }
     }
@@ -314,15 +317,15 @@ int OVLReader::ReadAllData(string ovl_filename, Database &db)
 
 
         //are strings usable?
-        if(ovl_string.length() < 1 && IgnoreSpineMorphologies == true) cout << endl << "Warning> symbol \"" << ovl_string << "\" in " << ovl_filename << " has less than one character. Empty text box? ...skipped." << endl;
+        if(ovl_string.length() < 1 && IgnoreSpineMorphologies == true) _stdoutput << endl << "Warning> symbol \"" << ovl_string << "\" in " << ovl_filename << " has less than one character. Empty text box? ...skipped." << endl;
         else
-        if(ovl_string.length() < 2 && IgnoreSpineMorphologies == false) cout << endl << "Warning> symbol \"" << ovl_string << "\" in " << ovl_filename << " has less than two characters. No morphology tag? ...skipped." << endl;
+        if(ovl_string.length() < 2 && IgnoreSpineMorphologies == false) _stdoutput << endl << "Warning> symbol \"" << ovl_string << "\" in " << ovl_filename << " has less than two characters. No morphology tag? ...skipped." << endl;
 
         if (ovl_string == "NoAlnum" || ovl_string == "NoValue" || ovl_category == "NoCategory")
         {
             //no it's not, then skip this position and move forward
             //comments (meaning color = pink) will be skipped without Warning.
-            if (ovl_category != "comment") cout << endl << "Warning> "<< ovl_filename <<" detected ("<<ovl_string<<","<<ovl_category<<") ...skipped." << endl;
+            if (ovl_category != "comment") _stdoutput << endl << "Warning> "<< ovl_filename <<" detected ("<<ovl_string<<","<<ovl_category<<") ...skipped." << endl;
             //continue;
         }
         else
@@ -413,7 +416,7 @@ int OVLReader::ReadAllData(string ovl_filename, Database &db)
                 else
                 {
                     //error handling
-                    cout << endl << "Error> spine \"" << ovl_string << "\" on dendrite \"" << dendrite_id << "\" ("<< ovl_filename <<") has no valid morphology." << endl;
+                    _stdoutput << endl << "Error> spine \"" << ovl_string << "\" on dendrite \"" << dendrite_id << "\" ("<< ovl_filename <<") has no valid morphology." << endl;
                     //the setabortflag is used to avoid program termination. Instead all errors will be collected and after that the program stops. This helps the user debugging his OVL files.
                     db.SetAbortFlag();
                 }
@@ -435,8 +438,8 @@ int OVLReader::ReadAllData(string ovl_filename, Database &db)
         dbResults tmp = db.Query(Query);
         if (tmp.size() > 0) //if yes
         {
-            cout << endl << "Error> multiple insert of spine \"" << spine_ids[k] << "\" from dendrite \"" << dendrite_id << "\" at day " << _itoa(day) << " causes database redundancy. ";
-            cout << "Recheck " << ovl_filename << " before you continue." << endl;
+            _stdoutput << endl << "Error> multiple insert of spine \"" << spine_ids[k] << "\" from dendrite \"" << dendrite_id << "\" at day " << _itoa(day) << " causes database redundancy. ";
+            _stdoutput << "Recheck " << ovl_filename << " before you continue." << endl;
             db.SetAbortFlag();
         }
         else //if not
@@ -540,7 +543,7 @@ int OVLReader::ReadAllData(string ovl_filename, Database &db)
     Query += ovl_filename;
     Query += "\");";*/
     db.Query(Query);
-    //cout << "\rInfo> Added " << sum_dendrites << " dendrites and " << sum_spines << " spines ...";
+    //_stdoutput << "\rInfo> Added " << sum_dendrites << " dendrites and " << sum_spines << " spines ...";
 
     return sum_spines;
 }
