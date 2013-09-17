@@ -60,7 +60,7 @@
 #include "database.h"
 #include "functions.h"
 
-#define VERSION_STR "Info> SpineMiner 1.01 (Simon Ochs 2013)."
+#define VERSION_STR "Info> SpineMiner 1.1 (Simon Ochs 2013)."
 
 using namespace std;
 
