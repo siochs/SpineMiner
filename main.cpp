@@ -50,6 +50,7 @@
 * SpineMiner.exe -outputtocerr                                    --> Changes standard output to cerr. File logging will be disabled
 */
 
+
 #include <stdio.h>
 #include <string>
 #include <iostream>
@@ -60,13 +61,14 @@
 #include "database.h"
 #include "functions.h"
 
-#define VERSION_STR "Info> SpineMiner 1.1 (Simon Ochs 2013)."
+#define VERSION_STR "Info> SpineMiner 1.2 (Simon Ochs 2014)."
 
 using namespace std;
-
 std::ofstream _stdoutput;
 
-//#include "functions.cpp"
+
+
+
 
 int main(int argc, char *argv[])
 {

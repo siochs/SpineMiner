@@ -34,6 +34,8 @@
 		</Compiler>
 		<Linker>
 			<Add library="gdi32" />
+			<Add library="iphlpapi" />
+			<Add library="ws2_32" />
 		</Linker>
 		<Unit filename="database.cpp" />
 		<Unit filename="dbscan.cpp" />

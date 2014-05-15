@@ -31,6 +31,7 @@
 #define BACKGROUND_STABLE_SPINES_OPACITY    0.03
 #define BACKGROUND_STABLE_SPINES_RADIUS     20
 
+
 //using namespace cimg_library;
 
 //vars

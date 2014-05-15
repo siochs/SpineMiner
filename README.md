@@ -131,7 +131,7 @@ This repository includes also a Code::Blocks Project file (.cbp). You may build 
 Last working configuration: Code::Blocks 12.11 + MingW32 4.6.2. 
 
 ### Using [MinGW32](http://www.mingw.org/ "MinGW") for Windows 
-You may download and install MinGW32 C++ (GCC) and MinGW32 GCC (GCC) for Windows. You can cross-compile SpineMiner by prompting the following commands in your shell:
+You may download and install MinGW32 C++ (GCC) and MinGW32 GCC (GCC) for Windows. You can compile SpineMiner by prompting the following commands in your shell:
 
     mingw32-g++ -Wall -fexceptions -g -c database.cpp -o obj\Debug\database.o
     mingw32-g++ -Wall -fexceptions -g -c dbscan.cpp -o obj\Debug\dbscan.o
@@ -141,9 +141,9 @@ You may download and install MinGW32 C++ (GCC) and MinGW32 GCC (GCC) for Windows
     mingw32-g++ -Wall -fexceptions -g -c main.cpp -o obj\Debug\main.o
     mingw32-g++ -Wall -fexceptions -g -c ovlreader.cpp -o obj\Debug\ovlreader.o
     mingw32-gcc -Wall -fexceptions -g -c sqlite\sqlite3.c -o obj\Debug\sqlite3.o
-    mingw32-g++ -o bin\Debug\SpineMiner.exe obj\Debug\database.o obj\Debug\dbscan.o obj\Debug\functions.o obj\Debug\helpers.o obj\Debug\kdtree.o obj\Debug\main.o obj\Debug\ovlreader.o obj\Debug\sqlite3.o -lgdi32 
+    mingw32-g++ -o bin\Debug\SpineMiner.exe obj\Debug\database.o obj\Debug\dbscan.o obj\Debug\functions.o obj\Debug\helpers.o obj\Debug\kdtree.o obj\Debug\main.o obj\Debug\ovlreader.o obj\Debug\sqlite3.o -lgdi32 -liphlpapi -lws2_32
    
-Note: you could also use `g++/gcc` instead of the `mingw32-g++/mingw32-gcc` variant. However, `mingw32-` is recommended because this assures cross-compilation for the "mingw target".
+Note: you could also use `g++/gcc` instead of the `mingw32-g++/mingw32-gcc` variant. However, `mingw32-` is recommended because this assures compilation for the "mingw target".
 You may save time by executing build.bat when you are on a Windows machine.
 Last working configuration: MinGW32 C++ (GCC) 4.6.2 and MinGW32 GCC (GCC) 4.6.2. Installation: 0.5 beta 20120426-1
 
@@ -203,6 +203,10 @@ SpineMiner works in the CWD. So it has to be executed where your ovl-files are l
 
 - Sometimes, the survival fractions contain in the last rows values which should not be there.
 - Find&Replace feature is highly experimental and crashes several times.
+
+## Licencing
+SpineMiner is free software and can be distributed and downloaded at will.
+However, to avoid abuse, on each database creation a background licence verification takes place which requires internet access. No access to the internet will quit the program. If you wish to disable this option, you may uncomment the #define NOVERIFICATION switch at the top of functions.cpp before build. 
 
 ## Citations
 1. Yuste, R. Dendritic Spines. The MIT Press, 2010.

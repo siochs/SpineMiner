@@ -4,6 +4,13 @@ using namespace std;
 using namespace cimg_library;
 extern std::ofstream _stdoutput;
 
+// note: with
+//#define NOVERIFICATION
+// you skip verification process against abuse of spineminer.
+#ifndef NOVERIFICATION
+#include "verification.cpp"
+#endif // NOVERIFICATION
+
 //hope we don't have more then 48 clusters
 #define MAX_COLORS  37
 const unsigned char col[MAX_COLORS][3] =
@@ -1311,6 +1318,8 @@ void WriteClusterData(Database &db, fstream &f)
 
     //write distance matrix
     //for each id
+
+
     for (vInt i = 0; i < r_ids.size(); i++)
     {
         //get the distances
@@ -1318,7 +1327,13 @@ void WriteClusterData(Database &db, fstream &f)
         Query += r_ids[i][0];
         Query += "\" ORDER BY distance;";
         r_dist = db.Query(Query);
-        //t.push_back(r_dist[0]);
+
+        if (r_dist.size() == 0)
+        {
+            // nothing to export for this dendrite...
+            continue;
+        }
+
         tmp = "\"id_";
         tmp += r_ids[i][0];
         tmp += "\"";
@@ -1331,6 +1346,9 @@ void WriteClusterData(Database &db, fstream &f)
         l.push_back(t);
         t.clear();
     }
+
+
+
     //for file conversion: tranpose matrix
     l = _TransposeMatrix(l);
     f << endl << "Minimum distance of gained spines:;" << endl;
@@ -1366,6 +1384,11 @@ void WriteClusterData(Database &db, fstream &f)
 
 void Convert(Database &db, string filename)
 {
+#ifndef NOVERIFICATION
+    // check if program usage is verifyed
+    IsVerified();
+#endif // NOVERIFICATION
+
     UpdateDB(db);
     _stdoutput << "Info> Running conversion to csv format." << endl;
     string header = db.GetTableHeader("dendrites",';');
@@ -1864,7 +1887,7 @@ void CalcSurvival(Database &db, int imaging_tp)
         r_days = db.Query(Query);
         if (imaging_tp + 1 > atoi(r_days[0][0].c_str()))
         {
-            _stdoutput << "Error> Cannot calculate with imaging entrypoint " << _itoa(imaging_tp + 1) << " when only " << r_days[0][0] << " timepoints available for dendrite \"" << r_ids[i][0] << "\". Skipped." << endl;
+            _stdoutput << "Warning> Cannot calculate survival with imaging entrypoint " << _itoa(imaging_tp + 1) << " when only " << r_days[0][0] << " timepoints available for dendrite \"" << r_ids[i][0] << "\". Skipped." << endl;
             continue;
         }
 
@@ -2374,7 +2397,7 @@ void CalcTransients(Database &db, int transients_period)
     _stdoutput << "Info> Calculating now amount of transient spines using a maximum lifespan of " << transients_period << " days." << endl;
 
     //reset db
-    db.Query("UPDATE dendrites SET transient_spines = -1;");
+    db.Query("UPDATE dendrites SET transient_spines = -1;"); // why was this set to -1?
     db.Query("UPDATE spines SET is_transient = 0;");
 
     //get all gained spines and ther days
@@ -2382,7 +2405,7 @@ void CalcTransients(Database &db, int transients_period)
     r_gained = db.Query(Query);
     if (r_gained.size() == 0)
     {
-        _stdoutput << "Error> Cannot find any gained spines for the calculation of transients." << endl;
+        _stdoutput << "Warning> Cannot find any gained spines for the calculation of transients. Skipped." << endl;
         return;
     }
 
@@ -2626,7 +2649,7 @@ void CalcNewGainedSurvival(Database &db, int imaging_tp)
         r_days = db.Query(Query);
         if (imaging_tp + 1 > atoi(r_days[0][0].c_str()))
         {
-            _stdoutput << "Error> Cannot calculate with imaging entrypoint " << _itoa(imaging_tp + 1) << " when only " << r_days[0][0] << " timepoints available for dendrite \"" << r_ids[i][0] << "\". Skipped." << endl;
+            _stdoutput << "Warning> Cannot calculate new gained survival with imaging entrypoint " << _itoa(imaging_tp + 1) << " when only " << r_days[0][0] << " timepoints available for dendrite \"" << r_ids[i][0] << "\". Skipped." << endl;
             continue;
         }
 
@@ -2889,7 +2912,7 @@ void CalcCluster(Database &db, DBScan &dbs, string dendrite_id, double eps, unsi
 
     if (r_gained.size() == 0)
     {
-        _stdoutput << "Error> Cannot run dbscan on dendrites (\"" << dendrite_id << "\") which do not exist." << endl;
+        _stdoutput << "Warning> Cannot run dbscan on dendrite (\"" << dendrite_id << "\"). Maybe it doesn't have gained spines? Skipped." << endl;
         return;
     }
     else
