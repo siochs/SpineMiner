@@ -206,7 +206,7 @@ SpineMiner works in the CWD. So it has to be executed where your ovl-files are l
 
 ## Licencing
 SpineMiner is free software and can be distributed and downloaded at will.
-However, to avoid abuse, on each database creation a background licence verification takes place which requires internet access. No access to the internet will quit the program. If you wish to disable this option, you may uncomment the #define NOVERIFICATION switch at the top of functions.cpp before build. 
+
 
 ## Citations
 1. Yuste, R. Dendritic Spines. The MIT Press, 2010.

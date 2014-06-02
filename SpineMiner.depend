@@ -358,11 +358,11 @@
 	<unicode/ubrk.h>
 	<unicode/utf16.h>
 
-1399984465 source:d:\github\spineminer\functions.cpp
+1400140730 source:d:\github\spineminer\functions.cpp
 	"functions.h"
 	"verification.cpp"
 
-1399992950 d:\github\spineminer\verification.cpp
+1400489897 d:\github\spineminer\verification.cpp
 	<windows.h>
 	<iphlpapi.h>
 

@@ -4,13 +4,6 @@ using namespace std;
 using namespace cimg_library;
 extern std::ofstream _stdoutput;
 
-// note: with
-//#define NOVERIFICATION
-// you skip verification process against abuse of spineminer.
-#ifndef NOVERIFICATION
-#include "verification.cpp"
-#endif // NOVERIFICATION
-
 //hope we don't have more then 48 clusters
 #define MAX_COLORS  37
 const unsigned char col[MAX_COLORS][3] =
@@ -1384,11 +1377,6 @@ void WriteClusterData(Database &db, fstream &f)
 
 void Convert(Database &db, string filename)
 {
-#ifndef NOVERIFICATION
-    // check if program usage is verifyed
-    IsVerified();
-#endif // NOVERIFICATION
-
     UpdateDB(db);
     _stdoutput << "Info> Running conversion to csv format." << endl;
     string header = db.GetTableHeader("dendrites",';');
